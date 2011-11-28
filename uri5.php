@@ -3,7 +3,7 @@
  * URI5 is a compact set of URI-related PHP functions. It provides reliable ways to parse URIs and
  * get/compare their parts. It doesn't depend on any libraries or frameworks. To install, drop this 
  * file into a directory and use require_once() or include_once() to load it.
- * @author Ryan Van Etten
+ * @author Ryan Van Etten (c) 2011
  * @link http://uri5.com
  * @license MIT
  * @version 1.0.0
