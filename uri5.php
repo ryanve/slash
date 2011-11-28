@@ -72,8 +72,8 @@ function uri5_get_hostname( $uri ) {
  * uri5_slash_authority - Return the authority of a URI prepended by 
  * a double slash. This is useful for sanitizing dns-prefetch URIs. Technically
  * you want only the hostname for prefetches, but when you know that there's 
- * no username or port in your input, this this gives you the same result and 
- * is more efficient in practice.
+ * no username or port in your input, then this gives you the same result and 
+ * is slightly more efficient.
  * @example
  *  uri5_slash_authority('foo://example.com/dir/file.htm')       #  '//example.com'
  *  uri5_slash_authority('foo://www.example.com/dir/file.htm')   #  '//www.example.com'
