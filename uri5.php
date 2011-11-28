@@ -54,7 +54,7 @@ function uri5_get_authority( $uri ) {
 }}
 
 /**
- * uri5_get_hostname - Return the authority of a URI.
+ * uri5_get_hostname - Return the hostname of a URI.
  * @param (string) $uri is the URI that you want to get the hostname of. In cases where 
  * you are certain that your input does not have a username and port, then consider using 
  * the slightly more efficient uri5_get_authority() function above.
