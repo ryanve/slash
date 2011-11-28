@@ -15,7 +15,7 @@
  * @example
  *  uri5_remove_front('foo://example.com/1') #  'example.com/1'
  *  uri5_remove_front('//example.com/2')     #  'example.com/2'
- * 	uri5_remove_front('www.example.com/3')   #  'www.example.com/3'
+ *  uri5_remove_front('www.example.com/3')   #  'www.example.com/3'
 */
 if (!function_exists('uri5_remove_front')) {
 function uri5_remove_front( $uri ) {
@@ -46,7 +46,7 @@ function uri5_scheme_relative( $uri ) {
  * @example
  *  uri5_get_authority('foo://example.com/dir/file.htm')       #  'example.com'
  *  uri5_get_authority('foo://www.example.com/dir/file.htm')   #  'www.example.com'
- * 	uri5_get_authority('foo://user:pass@example.com:800/dir/') #  'user:pass@example.com:800'
+ *  uri5_get_authority('foo://user:pass@example.com:800/dir/') #  'user:pass@example.com:800'
  */
 if (!function_exists('uri5_get_authority')) {
 function uri5_get_authority( $uri ) {
@@ -61,7 +61,7 @@ function uri5_get_authority( $uri ) {
  * @example
  *  uri5_get_hostname('foo://example.com/dir/file.htm')       #  'example.com'
  *  uri5_get_hostname('foo://www.example.com/dir/file.htm')   #  'www.example.com'
- * 	uri5_get_hostname('foo://user:pass@example.com:800/dir/') #  'example.com'
+ *  uri5_get_hostname('foo://user:pass@example.com:800/dir/') #  'example.com'
  */
 if (!function_exists('uri5_get_hostname')) {
 function uri5_get_hostname( $uri ) {
@@ -77,7 +77,7 @@ function uri5_get_hostname( $uri ) {
  * @example
  *  uri5_slash_authority('foo://example.com/dir/file.htm')       #  '//example.com'
  *  uri5_slash_authority('foo://www.example.com/dir/file.htm')   #  '//www.example.com'
- * 	uri5_slash_authority('foo://user:pass@example.com:800/dir/') #  '//user:pass@example.com:800'
+ *  uri5_slash_authority('foo://user:pass@example.com:800/dir/') #  '//user:pass@example.com:800'
  */
 if (!function_exists('uri5_slash_authority')) {
 function uri5_slash_authority( $uri ) {
