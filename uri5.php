@@ -6,12 +6,13 @@
  * @author Ryan Van Etten (c) 2011
  * @link http://uri5.com
  * @license MIT
- * @version 1.1.0
+ * @version 1.1.1
  */
 
 /**
- * uri5_remove_front - Remove the scheme and :// from a URI. In other words, the first 
- * double slash and anything to its left is removed.
+ * uri5_remove_front - Remove the scheme and :// from a URI. 
+ * The first double slash and anything to its left is removed.
+ * Designed to be safer than using parse_url().
  * @example
  *  uri5_remove_front('foo://example.com/1') #  'example.com/1'
  *  uri5_remove_front('//example.com/2')     #  'example.com/2'
@@ -19,11 +20,9 @@
 */
 if ( !function_exists('uri5_remove_front')) {
     function uri5_remove_front( $uri ) {
-        $parts = explode( '//', $uri ); // Split URI into parts. (Using explode() is safer than parse_url().)
-        $count = count($parts);         // Count the array.
-        if ( $count === 1 && ctype_alnum(substr($parts[0], 0, 1 ))) { return $parts[0]; } // Already removed => return.
-        elseif ( $count === 2 && ctype_alnum(substr($parts[1], 0, 1)) && empty($parts[0]) || substr($parts[0], -1) === ':' ) { return $parts[1]; } // Expected inputs.
-        else { return preg_replace( '/^([^a-z0-9]*)/', '', $uri ); } // Unexpected inputs. Replace non-alphanumeric leading chars.
+        $uri = explode ( '//', trim($uri) );
+        count($uri) > 1 and array_shift($uri);
+        return ltrim( trim(implode( '//', $uri )), ':/' );
     }
 }
 
