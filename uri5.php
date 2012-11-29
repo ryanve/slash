@@ -6,7 +6,7 @@
  * @author Ryan Van Etten (c) 2011
  * @link http://uri5.com
  * @license MIT
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 /**
