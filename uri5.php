@@ -17,14 +17,15 @@
  *  uri5_remove_front('//example.com/2')     #  'example.com/2'
  *  uri5_remove_front('www.example.com/3')   #  'www.example.com/3'
 */
-if (!function_exists('uri5_remove_front')) {
-function uri5_remove_front( $uri ) {
-	$parts = explode( '//', $uri ); // Split URI into parts. (Using explode() is safer than parse_url().)
-	$count = count($parts);         // Count the array.
-	if ( $count === 1 && ctype_alnum(substr($parts[0], 0, 1 ))) { return $parts[0]; } // Already removed => return.
-	elseif ( $count === 2 && ctype_alnum(substr($parts[1], 0, 1)) && empty($parts[0]) || substr($parts[0], -1) === ':' ) { return $parts[1]; } // Expected inputs.
-	else { return preg_replace( '/^([^a-z0-9]*)/', '', $uri ); } // Unexpected inputs. Replace non-alphanumeric leading chars.
-}}
+if ( !function_exists('uri5_remove_front')) {
+    function uri5_remove_front( $uri ) {
+        $parts = explode( '//', $uri ); // Split URI into parts. (Using explode() is safer than parse_url().)
+        $count = count($parts);         // Count the array.
+        if ( $count === 1 && ctype_alnum(substr($parts[0], 0, 1 ))) { return $parts[0]; } // Already removed => return.
+        elseif ( $count === 2 && ctype_alnum(substr($parts[1], 0, 1)) && empty($parts[0]) || substr($parts[0], -1) === ':' ) { return $parts[1]; } // Expected inputs.
+        else { return preg_replace( '/^([^a-z0-9]*)/', '', $uri ); } // Unexpected inputs. Replace non-alphanumeric leading chars.
+    }
+}
 
 /**
  * uri5_scheme_relative - convert a URI into a scheme-relative URI. (protocol-relative URI) 
@@ -35,10 +36,11 @@ function uri5_remove_front( $uri ) {
  *  uri5_scheme_relative('example.com/dir/file.htm')        #  '//example.com/dir/file.htm'
  *  uri5_scheme_relative('foo://example.com//dir//double')  #  '//example.com//dir//double'
 */
-if (!function_exists('uri5_scheme_relative')) {
-function uri5_scheme_relative( $uri ) {
-	return '//' . uri5_remove_front($uri);
-}}
+if ( !function_exists('uri5_scheme_relative')) {
+    function uri5_scheme_relative( $uri ) {
+        return '//' . uri5_remove_front($uri);
+    }
+}
 
 /**
  * uri5_get_authority - Return the authority of a URI.
@@ -48,10 +50,11 @@ function uri5_scheme_relative( $uri ) {
  *  uri5_get_authority('foo://www.example.com/dir/file.htm')   #  'www.example.com'
  *  uri5_get_authority('foo://user:pass@example.com:800/dir/') #  'user:pass@example.com:800'
  */
-if (!function_exists('uri5_get_authority')) {
-function uri5_get_authority( $uri ) {
-	return array_shift( explode( '/', uri5_remove_front($uri) ) );
-}}
+if ( !function_exists('uri5_get_authority')) {
+    function uri5_get_authority( $uri ) {
+        return array_shift( explode( '/', uri5_remove_front($uri) ) );
+    }
+}
 
 /**
  * uri5_get_hostname - Return the hostname of a URI.
@@ -63,10 +66,11 @@ function uri5_get_authority( $uri ) {
  *  uri5_get_hostname('foo://www.example.com/dir/file.htm')   #  'www.example.com'
  *  uri5_get_hostname('foo://user:pass@example.com:800/dir/') #  'example.com'
  */
-if (!function_exists('uri5_get_hostname')) {
-function uri5_get_hostname( $uri ) {
-	return array_shift( explode( ':', array_pop( explode( '@', uri5_get_authority($uri) ) ) ) );
-}}
+if ( !function_exists('uri5_get_hostname')) {
+    function uri5_get_hostname( $uri ) {
+        return array_shift( explode( ':', array_pop( explode( '@', uri5_get_authority($uri) ) ) ) );
+    }
+}
 
 /**
  * uri5_slash_authority - Return the authority of a URI prepended by 
@@ -79,9 +83,10 @@ function uri5_get_hostname( $uri ) {
  *  uri5_slash_authority('foo://www.example.com/dir/file.htm')   #  '//www.example.com'
  *  uri5_slash_authority('foo://user:pass@example.com:800/dir/') #  '//user:pass@example.com:800'
  */
-if (!function_exists('uri5_slash_authority')) {
-function uri5_slash_authority( $uri ) {
-	return '//' . uri5_get_authority( $uri );
-}}
+if ( !function_exists('uri5_slash_authority') ) {
+    function uri5_slash_authority( $uri ) {
+        return '//' . uri5_get_authority( $uri );
+    }
+}
 
 #end
