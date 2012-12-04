@@ -7,6 +7,30 @@
 ## Install
 To install, drop [uri5.php](https://github.com/ryanve/uri5/blob/master/uri5.php) into a directory and use [`require_once()`](http://php.net/manual/en/function.require-once.php) or [`include_once()`](http://php.net/manual/en/function.include-once.php) to load it.
 
+## Usage 
+
+```php
+\uri5\scheme( $uri );           # get scheme (excludes ':')
+\uri5\bar( $uri );              # get "address bar" uri
+\uri5\hostname( $uri );         # get hostname
+\uri5\authority( $uri );        # get authority
+\uri5\userinfo( $uri );         # get userinfo
+\uri5\user( $uri );             # get username
+\uri5\pass( $uri );             # get username
+\uri5\port( $uri );             # get port number (string)
+\uri5\hierarchy( $uri );        # get hier part
+\uri5\path( $uri );             # get path part
+\uri5\query( $uri );            # get query str (excludes '?')
+\uri5\fragment( $uri );         # get fragment  (excludes '#')
+\uri5\hash( $uri );             # get fragment  (includes '#')
+\uri5\prorel( $uri );           # convert to protocol relative
+\uri5\prorel( $uri, $scheme );  # replace the scheme
+\uri5\prefetch( $uri );         # get uri for dns prefetch
+\uri5\lslash( $uri );           # left slash it
+\uri5\rslash( $uri );           # right slash it
+\uri5\parts( $uri );            # get object containing parts
+```
+
 ## License
 
 ### URI5 is available under the [MIT license](http://en.wikipedia.org/wiki/MIT_License)
