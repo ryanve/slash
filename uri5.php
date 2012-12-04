@@ -3,7 +3,7 @@
  * uri5.php    URI5 is a compact set of URI-related PHP functions.
  * @author     Ryan Van Etten (c) 2011-2012
  * @link       http://uri5.com
- * @version    2.0.0
+ * @version    2.0.1
  * @license    MIT
  * @uses       PHP 5.3+
  */
@@ -84,14 +84,14 @@ namespace uri5 {
     }
 
     /**
-     * hierarchy()      Get the "hierarchical" part of the URI. It includes everything 
+     * hier()      Get the "hierarchical" part of the URI. It includes everything 
      *                  after the '://' and before the ?query string or #fragment.
      *
      * @param   string  $uri
      * @return  string
      */
-    if ( ! \function_exists( __NAMESPACE__ . '\\hierarchy' ) ) {
-        function hierarchy( $uri ) {
+    if ( ! \function_exists( __NAMESPACE__ . '\\hier' ) ) {
+        function hier( $uri ) {
             $uri = bar( $uri );
             $uri and $uri = \strtok( $uri, '?#' );
             return (string) $uri;
@@ -291,7 +291,8 @@ namespace uri5 {
             $uri = bar( $uri );
             $uri and ( $uri = \strtok( $uri, '#' ) )
                  and ( $uri = \strstr( $uri, '?' ) )
-                 and ( $uri = \substr( $uri, 1 ) ) ;
+                 and ( $uri = \substr( $uri, 1 ) )
+                 and ( $uri = \html_entity_decode( $uri ) );
             return (string) $uri;
         }
     }
@@ -316,8 +317,8 @@ namespace uri5 {
         }
     }
 
-    if ( ! \function_exists( __NAMESPACE__ . '\\nosearch' ) ) {
-        function nosearch( $str ) {
+    if ( ! \function_exists( __NAMESPACE__ . '\\novars' ) ) {
+        function novars( $str ) {
             if ( ! isset($str) || ! \is_string($str) ) return '';
             return (string) \strtok( $str, '?#' );
         }
@@ -347,9 +348,9 @@ namespace uri5 {
             if ( ! $bar )
                 return $o;
             
-            # authority / hierarchy / path
-            $o->hierarchy = (string) \strtok( $bar, '?#' );
-            $part = \explode( '/', $o->hierarchy );
+            # authority / hierarchial part / path
+            $o->hier = (string) \strtok( $bar, '?#' );
+            $part = \explode( '/', $o->hier );
             $o->authority = \array_shift( $part );
             $o->path = lslash( \implode( '/', $part ) );
 
@@ -381,8 +382,8 @@ namespace uri5 {
             
             # query
             $part = \explode( '?', \strtok( $bar, '#' ) ); # nohash
-            \array_shift( $part ); # nosearch
-            $o->query = \implode( '?', $part );
+            \array_shift( $part ); # novars
+            $o->query = \html_entity_decode( \implode( '?', $part ) );
             
             # hash / fragment
             if ( $hash = (string) \strstr( $o->bar, '#' ) )
