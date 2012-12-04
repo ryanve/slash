@@ -32,7 +32,7 @@ To better understand the terminology, please view [this diagram](http://en.wikip
 \uri5\rslash( $uri );           # right slash it
 \uri5\nohash( $uri );           # remove hash
 \uri5\novars( $uri );           # remove hash and query
-\uri5\parts( $uri );            # get object containing parts
+\uri5\parse( $uri );            # get object containing parts
 ```
 
 ## License
