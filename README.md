@@ -1,10 +1,12 @@
 # [slash](../../)
 
-[Slash](../../) (formerly <b>uri5</b>) is a compact set of opensource path and URI-related PHP functions. It consists of two utility classes in the `slash` namespace: `URI` and `Path`. URI methods aim to be more practical and reliable than PHP's [`parse_url`](http://www.php.net/manual/en/function.parse-url.php). `Path` contains reliable methods for working with filesystem paths on the server.
+[Slash](../../) (formerly <b>uri5</b>) is a compact set of opensource path and URI-related PHP functions. It consists of two utility classes in the `slash` namespace: `Uri` and `Path`. URI methods aim to be more practical and reliable than PHP's [`parse_url`](http://www.php.net/manual/en/function.parse-url.php). `Path` contains reliable methods for working with filesystem paths on the server.
 
 ## Usage
 
-To better understand the terminology, please view [this diagram](http://en.wikipedia.org/wiki/URI_scheme#Examples) as your primary reference, and consider that the rest are a normalization between the terms in [PHP](http://www.php.net/manual/en/function.parse-url.php), [JavaScript](https://developer.mozilla.org/en-US/docs/DOM/window.location), [jQuery Mobile](http://jquerymobile.com/test/docs/api/methods.html), and [node](http://nodejs.org/docs/v0.5.5/api/url.html).
+### `Uri` Methods
+
+Please view [this diagram](http://en.wikipedia.org/wiki/URI_scheme#Examples) as primary terminology reference. Other methods below use names normalized between terms in [PHP](http://www.php.net/manual/en/function.parse-url.php), [JavaScript](https://developer.mozilla.org/en-US/docs/DOM/window.location), [jQuery Mobile](http://jquerymobile.com/test/docs/api/methods.html), and [node](http://nodejs.org/docs/v0.5.5/api/url.html).
 
 ```php
 \slash\Uri::scheme($uri)           # get scheme (excludes ':')
