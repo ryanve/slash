@@ -1,13 +1,14 @@
 <?php
 /**
- * uri5.php    URI5 is a compact set of URI-related PHP functions.
  * @author     Ryan Van Etten
- * @link       http://uri5.com
+ * @link       http://github.com/ryanve/slash
  * @version    3.0.0-0
  * @license    MIT
  */
 
-class Uri5 {
+namespace slash;
+
+class Uri {
 
     /**
      * @param  string $str
