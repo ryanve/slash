@@ -32,6 +32,47 @@ Please view [this diagram](http://en.wikipedia.org/wiki/URI_scheme#Examples) as 
 \slash\Uri::parse($uri)            # get object containing parts
 ```
 
+### `Path` Methods
+
+```php
+\slash\Path::lslash($path)
+\slash\Path::rslash($path)
+\slash\Path::trim($path)
+\slash\Path::join(*$parts)
+\slash\Path::split($path)
+\slash\Path::normalize($path)
+\slash\Path::root($relative?)
+\slash\Path::dir($relative?)
+\slash\Path::ext($path, $add?)
+\slash\Path::filename($file)
+\slash\Path::inc($file)
+\slash\Path::isPath($item)
+\slash\Path::isFile($item)
+\slash\Path::isDir($item)
+\slash\Path::isDot($item)
+\slash\Path::isAbs($path)
+\slash\Path::toAbs($path)
+\slash\Path::toUri($path, $scheme?)
+\slash\Path::isHttps()
+\slash\Path::tree($path)
+\slash\Path::listPaths($path)
+\slash\Path::listFiles($path)
+\slash\Path::mtime($path, $format?)
+\slash\Path::affix($list, $prefix, $suffix?)
+\slash\Path::infix($list, $infix)
+\slash\Path::group($array)
+\slash\Path::sort($array)
+\slash\Path::locate($needles)
+\slash\Path::contains($haystack, $needle)
+\slash\Path::search($paths, $needles?)
+\slash\Path::find($list, $test)
+\slash\Path::getFile($path, $fn?)
+\slash\Path::getJson($path, $fn?)
+\slash\Path::putFile($path, $data)
+\slash\Path::putJson($path, $data)
+\slash\Path::loadFile($path, $fn?)
+```
+
 ## License
 
 ### Slash is available under the [MIT license](http://en.wikipedia.org/wiki/MIT_License)
