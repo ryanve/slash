@@ -6,7 +6,16 @@
 
 ### `Uri` Methods
 
-Please view [this diagram](http://en.wikipedia.org/wiki/URI_scheme#Examples) as primary terminology reference. Other methods below use names normalized between terms in [PHP](http://www.php.net/manual/en/function.parse-url.php), [JavaScript](https://developer.mozilla.org/en-US/docs/DOM/window.location), [jQuery Mobile](http://jquerymobile.com/test/docs/api/methods.html), and [node](http://nodejs.org/docs/v0.5.5/api/url.html).
+
+<pre>foo://user:pass@example.com:800/dir/file.php?s=10&amp;e=23#jump
+\_/   \_______/ \_________/ \_/              \_______/ \__/
+ |        |          |       |                  |       |
+ |     userinfo   hostname  port              query   fragment
+ |    \_______________________/\___________/
+ |            |                      |
+scheme    authority                 path</pre>
+
+#### Methods are based on the [URI diagram](http://en.wikipedia.org/wiki/URI_scheme#Examples) or otherwise normalized between terms in [PHP](http://www.php.net/manual/en/function.parse-url.php), [JavaScript](https://developer.mozilla.org/en-US/docs/DOM/window.location), [jQuery Mobile](http://jquerymobile.com/test/docs/api/methods.html), and [node](http://nodejs.org/docs/v0.5.5/api/url.html).
 
 ```php
 \slash\Uri::scheme($uri)           # get scheme (excludes ':')
