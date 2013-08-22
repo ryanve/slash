@@ -1,7 +1,7 @@
 <?php
 /**
  * @link     http://github.com/ryanve/slash
- * @version  0.5.0
+ * @version  3.0.0-0
  * @license  MIT
  */
 
