@@ -1,9 +1,8 @@
 <?php
 /**
- * @author     Ryan Van Etten
- * @link       http://github.com/ryanve/slash
- * @version    3.0.0-0
- * @license    MIT
+ * @link     http://github.com/ryanve/slash
+ * @version  3.0.0-0
+ * @license  MIT
  */
 
 namespace slash;
