@@ -1,6 +1,6 @@
 # [slash](../../)
 
-[Slash](../../) (formerly <b>uri5</b>) is a compact set of opensource path and URI-related PHP functions. It consists of two utility classes in the `slash` namespace: `Uri` and `Path`. URI methods aim to be more practical and reliable than PHP's [`parse_url`](http://www.php.net/manual/en/function.parse-url.php). `Path` contains reliable methods for working with filesystem paths on the server.
+<b>Slash</b> (formerly <b>uri5</b>) is a compact set of opensource path and URI-related PHP functions. It consists of two utility classes in the `slash` namespace: `Uri` and `Path`. URI methods aim to be more practical and reliable than [`parse_url`](http://www.php.net/manual/en/function.parse-url.php). `Path` contains reliable methods for working with server filesystem paths.
 
 ## Usage
 
