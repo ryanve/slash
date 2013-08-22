@@ -1,0 +1,18 @@
+{
+    "name": "ryanve/slash",
+    "description": "URI and filesystem path utilities.",
+    "homepage": "https://github.com/ryanve/slash",
+    "keywords": ["uri", "url", "path", "filesystem", "directory", "json", "utility", "file"],
+    "license": "MIT",
+    "authors": [{
+        "name": "Ryan Van Etten",
+        "homepage": "http://ryanve.com"
+    }],
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "files": ["path.php", "uri.php"]
+    },
+    "minimum-stability": "dev"
+}
