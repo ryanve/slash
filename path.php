@@ -1,14 +1,12 @@
 <?php
 /**
  * @link     http://github.com/ryanve/slash
- * @version  3.0.0-0
+ * @version  3.0.0-2
  * @license  MIT
  */
-
 namespace slash;
 
 class Path {
-
     const slashes = '/\\';
     
     protected static $mixins = array();
@@ -447,5 +445,4 @@ class Path {
         } else { $path = false; }
         return static::pass($fn, $path);
     }
-    
-}#class
+}

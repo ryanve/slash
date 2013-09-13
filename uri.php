@@ -1,14 +1,12 @@
 <?php
 /**
  * @link     http://github.com/ryanve/slash
- * @version  3.0.0-0
+ * @version  3.0.0-2
  * @license  MIT
  */
-
 namespace slash;
 
 class Uri {
-
     /**
      * @param  string $str
      * @param  string $chars
@@ -28,10 +26,9 @@ class Uri {
     }
     
     /**
-     * Remove the scheme and :// from a URI. The first 
-     * double slash and anything to its left is removed. Designed to be 
-     * safer than using parse_url(). Called "bar" b/c this is what 
-     * you see in the address bar in modern web browsers
+     * Remove the scheme and :// from a URI. The first `//` and anything to 
+     * its left is removed. Designed to be safer than using parse_url().  
+     * Called "bar" b/c this is what you see in the address bar in web browsers
      * @param  string $uri
      * @return string
      * @example bar('foo://example.com/1') #  'example.com/1'
@@ -50,9 +47,9 @@ class Uri {
     /**
      * @param  string $uri
      * @return string
-     * @link  en.wikipedia.org/wiki/Fragment_identifier
-     * @link  stackoverflow.com/q/2849756/770127
-     * @link  dev.airve.com/demo/speed_tests/php/fragment.php
+     * @link http://en.wikipedia.org/wiki/Fragment_identifier
+     * @link http://stackoverflow.com/q/2849756/770127
+     * @link http://dev.airve.com/demo/speed_tests/php/fragment.php
      */
     public static function fragment($uri) {
         # Return chars after the first hash `#`
@@ -102,11 +99,9 @@ class Uri {
     }
     
     /**
-     * Get the scheme part of a URI (a.k.a. scheme name or protocol).
-     * Returns empty if the URI in non-absolute or if the scheme contains 
-     * invalid chars. A scheme can contain alpanumeric|dash|plus|period 
-     * and must start w/ a letter. It is case-insensitive and followed by `:`
-     * @link   en.wikipedia.org/wiki/URI_scheme 
+     * Get the scheme (a.k.a. scheme name or protocol) part of a URI. Returns empty if the URI 
+     * is non-absolute or invalid. Schemes can contain alpanumeric|dash|plus|period 
+     * and must start w/ a letter. Schemes are case-insensitive and followed by `:`
      * @param  string $uri
      * @return string
      */
@@ -125,8 +120,7 @@ class Uri {
     }
 
     /**
-     * Get the "authority" part of a URI. 
-     * It contains the "userinfo" (if any) + "hostname" + "port" (if any).
+     * Get the "authority" part of a URI. (userinfo? + hostname + port?)
      * @param  string $uri
      * @return string
      * @example authority('foo://example.com/dir/file.htm')       # 'example.com'
@@ -164,15 +158,16 @@ class Uri {
      * @return string
      */
     public static function pass($uri) {
-        return $uri && ($uri = static::userinfo($uri)) && ($pos = \strpos($uri, ':')) ? (string) \substr($uri, ++$pos) : '';
+        $pos = ($uri = static::userinfo($uri)) ? \strpos($uri, ':') : false;
+        return $pos ? (string) \substr($uri, ++$pos) : '';
     }
 
     /**
      * Get the "hostname" part of a URI
      * @param   string  $uri
      * @return  string
-     * @link    en.wikipedia.org/wiki/URI_scheme#Examples
-     * @link    tools.ietf.org/html/rfc3986#section-3.2.2
+     * @link    http://en.wikipedia.org/wiki/URI_scheme#Examples
+     * @link    http://tools.ietf.org/html/rfc3986#section-3.2.2
      * @example hostname('foo://example.com/dir/file.htm')       # 'example.com'
      * @example hostname('foo://www.example.com/dir/file.htm')   # 'www.example.com'
      * @example hostname('foo://user:pass@example.com:800/dir/') # 'example.com'
@@ -190,7 +185,7 @@ class Uri {
      * Get the numeric "port" part of a URI
      * @param  string $uri
      * @return string
-     * @link  tools.ietf.org/html/rfc3986#section-3.2.3
+     * @link   http://tools.ietf.org/html/rfc3986#section-3.2.3
      * @example port('foo://example.com/dir/file.htm')       # ''
      * @example port('foo://user:pass@example.com:800/dir/') # '800'
      */
@@ -204,9 +199,9 @@ class Uri {
 
     /**
      * Get the "path" part of a URI
-     * @param  string  $uri  an absolute URI or full barname
-     * @return string
-     * @link   tools.ietf.org/html/rfc3986#section-3.3
+     * @param   string  $uri  an absolute URI or full barname
+     * @return  string
+     * @link    http://tools.ietf.org/html/rfc3986#section-3.3
      * @example path('foo://example.com/dir/file.htm')   # 'dir/file.htm'
      * @example path('foo://example.com/dir/file?q=yo')  # 'dir/file'
      * @example path('foo://example.com/dir/file#frag')  # 'dir/file'
@@ -333,4 +328,4 @@ class Uri {
             $o->fragment = (string) \substr($o->hash = $hash, 1);
         return $o;
     }
-}#class
+}

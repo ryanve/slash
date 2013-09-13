@@ -12,7 +12,7 @@
         "php": ">=5.3"
     },
     "autoload": {
-        "files": ["path.php", "uri.php"]
+        "classmap": ["Path.php", "Uri.php"]
     },
     "minimum-stability": "dev"
 }
