@@ -36,8 +36,7 @@ class Path {
     }
     
     /**
-     * @param  string  $name
-     * @return string
+     * @return array
      */
     public static function methods() {
         $methods = \get_class_methods(__CLASS__);
@@ -45,12 +44,10 @@ class Path {
     }
     
     /**
-     * @param  mixed  $fn
-     * @param  mixed  $value
-     * @return mixed
+     * @param mixed $fn
      */
-    protected static function pass($fn, $value = null) {
-        return null === $fn ? $value : \call_user_func_array($fn, \array_slice(\func_get_args(), 1));
+    protected static function done($fn) {
+        return null === \array_shift($a = \func_get_args()) ? \array_shift($a) : \call_user_func_array($fn, $a);
     }
     
     /**
@@ -394,7 +391,7 @@ class Path {
      * @return mixed
      */
     public static function getFile($path, callable $fn = null) {
-        return static::pass($fn, static::isFile($path) ? \file_get_contents($path) : false);
+        return static::done($fn, static::isFile($path) ? \file_get_contents($path) : false);
     }
     
     /** 
@@ -410,7 +407,7 @@ class Path {
      * @return mixed
      */
     public static function getJson($path, callable $fn = null) {
-        return static::pass($fn, \is_scalar($path) ? \json_decode(\file_get_contents($path)) : $path);
+        return static::done($fn, \is_scalar($path) ? \json_decode(\file_get_contents($path)) : $path);
     }
     
     /** 
@@ -432,6 +429,6 @@ class Path {
             $path = \ob_get_contents();
             \ob_end_clean();
         } else { $path = false; }
-        return static::pass($fn, $path);
+        return static::done($fn, $path);
     }
 }
