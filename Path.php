@@ -275,7 +275,7 @@ class Path {
      * @return int|string|null
      */
     public static function mtime($path, $format = null) {
-        $time = static::listFiles($path);
+        $time = static::files($path);
         $time = $time ? \max(\array_map('filemtime', static::affix($time, static::rslash($path)))) : null;
         return $format && $time ? \date($format, $time) : $time;
     }
