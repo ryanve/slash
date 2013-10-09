@@ -1,47 +1,43 @@
 <?php
 /**
- * @link     http://github.com/ryanve/slash
- * @version  3.0.0-3
- * @license  MIT
+ * @link http://github.com/ryanve/slash
+ * @version 3.0.0-4
+ * @license MIT
  */
 namespace slash;
+use \RecursiveIteratorIterator as RII;
+use \RecursiveDirectoryIterator as RDI;
 
 class Path {
-    const slashes = '/\\';
-    
-    protected static $mixins = array();
-    
-    /**
-     * @method
-     */
+    const slashes = '/\\';    
+    protected static $mixins = array(# aliases
+        'listPaths' => array(__CLASS__, 'paths')
+      , 'listFiles' => array(__CLASS__, 'files')
+      , 'listDirs' => array(__CLASS__, 'dirs')
+    );
+
     public static function __callStatic($name, $params) {
         if (isset(static::$mixins[$name]))
             return \call_user_func_array(static::$mixins[$name], $params);
         \trigger_error(__CLASS__ . "::$name is not callable.");
     }
 
-    /**
-     * Mixin custom static methods.
-     */
     public static function mixin($name, $fn = null) {
-        if (\is_scalar($name))
-            $fn and static::$mixins[$name] = $fn;
-        else foreach ($name as $k => $v)
-            self::mixin($k, $v);
+        if (\is_scalar($name)) $fn and static::$mixins[$name] = $fn;
+        else foreach ($name as $k => $v) self::mixin($k, $v);
     }
     
     /**
-     * Fully-qualify a method name (for callback use).
-     * @param   string  $name
-     * @return  string
+     * @param  string  $name
+     * @return string  fully-qualified method name
      */
     public static function method($name) {
         return __CLASS__ . "::$name";
     }
     
     /**
-     * @param   string  $name
-     * @return  string
+     * @param  string  $name
+     * @return string
      */
     public static function methods() {
         $methods = \get_class_methods(__CLASS__);
@@ -49,30 +45,30 @@ class Path {
     }
     
     /**
-     * @param   mixed  $fn
-     * @param   mixed  $value
-     * @return  mixed
+     * @param  mixed  $fn
+     * @param  mixed  $value
+     * @return mixed
      */
     protected static function pass($fn, $value = null) {
         return null === $fn ? $value : \call_user_func_array($fn, \array_slice(\func_get_args(), 1));
     }
     
     /**
-     * @return  string
+     * @return string
      */
     public static function lslash($str) {
         return '/' . \ltrim($str, static::slashes);
     }
    
     /**
-     * @return  string
+     * @return string
      */   
     public static function rslash($str) {
         return \rtrim($str, static::slashes) . '/';
     }
     
     /**
-     * @return  string
+     * @return string
      */   
     public static function trim($str) {
         return \trim($str, static::slashes);
@@ -80,7 +76,7 @@ class Path {
     
     /**
      * Join paths or URI parts using a fwd slash as the glue.
-     * @return  string
+     * @return string
      */
     public static function join() {
         $result = '';
@@ -90,7 +86,7 @@ class Path {
     }
 
     /**
-     * @return  array
+     * @return array
      */
     public static function split($path) {
         $path = \trim(static::normalize($path), '/');
@@ -98,7 +94,7 @@ class Path {
     }
     
     /**
-     * @return  string|null
+     * @return string|null
      */
     public static function part($path, $idx = 0) {
         \is_array($path) or $path = static::split($path);
@@ -107,28 +103,28 @@ class Path {
     }
     
     /**
-     * @return  string
+     * @return string
      */
     public static function normalize($path) {
         return \str_replace('\\', '/', $path);
     }
     
     /**
-     * @return  string
+     * @return string
      */   
     public static function root($pathRelative) {
         return $_SERVER['DOCUMENT_ROOT'] . static::lslash($pathRelative);
     }
     
     /**
-     * @return  string
+     * @return string
      */
     public static function dir($pathRelative) {
         return __DIR__ . static::lslash($pathRelative);
     }
     
     /**
-     * @return  string|false
+     * @return string|false
      */
     public static function ext($path, $add = null) {
         if (null === $add)
@@ -139,14 +135,14 @@ class Path {
     }
     
     /**
-     * @return  string
+     * @return string
      */
     public static function filename($path) {
         return \pathinfo($path, PATHINFO_FILENAME);
     }
     
     /**
-     * @return  bool
+     * @return bool
      */
     public static function inc($path) {
         ($bool = static::isFile($path)) and include $path;
@@ -154,21 +150,21 @@ class Path {
     }
     
     /**
-     * @return  bool
+     * @return bool
      */
     public static function isPath($item) {
         return \is_scalar($item) && \file_exists($item);
     }
     
     /**
-     * @return  bool
+     * @return bool
      */
     public static function isDir($item) {
         return \is_scalar($item) && \is_dir($item);
     }
     
     /**
-     * @return  bool
+     * @return bool
      */
     public static function isFile($item) {
         return \is_scalar($item) && \is_file($item);
@@ -176,30 +172,32 @@ class Path {
 
     /**
      * Test if item is a dot folder name
-     * @return  bool
+     * @return bool
      */
     public static function isDot($item) {
-        return '.' === $item || '..' === $item;
+        return \in_array(\basename($item), array('.', '..'));
     }
     
     /**
-     * @return  bool
+     * @return bool
      */
     public static function isAbs($item) {
         return \is_scalar($item) && \realpath($item) === $item;
     }
     
     /**
-     * @return  string|bool
+     * @return string|array|bool
      */
-    public static function toAbs($item) {
-        return \is_scalar($item) ? \realpath($item) : false;
+    public static function toAbs($path) {
+        if (\is_array($path)) return \array_map(array(__CLASS__, __FUNCTION__), $path); # recurse
+        if (\is_string($path) || \is_numeric($path)) return \realpath($path); # resolve relative path
+        return false;
     }
 
     /**
-     * @param   string   $path 
-     * @param   string   $scheme 
-     * @return  string
+     * @param  string   $path 
+     * @param  string   $scheme 
+     * @return string
      */
     public static function toUri($path = '', $scheme = null) {
         $uri = ($scheme && \is_string($scheme) ? $scheme . '://' : '//') . $_SERVER['SERVER_NAME'];
@@ -207,9 +205,9 @@ class Path {
     }
     
     /**
-     * @param   string   $path 
-     * @param   string   $scheme 
-     * @return  string
+     * @param  string   $path 
+     * @param  string   $scheme 
+     * @return string
      */
     public static function toUrl($path, $scheme = null) {
         \is_string($scheme) or $scheme = static::isHttps() ? 'https' : 'http';
@@ -217,85 +215,79 @@ class Path {
     }
     
     /**
-     * @return  bool
+     * @return bool
      */
     public static function isHttps() {
         return !empty($_SERVER['HTTPS']) and 'off' !== \strtolower($_SERVER['HTTPS'])
             or !empty($_SERVER['SERVER_PORT']) and 443 == $_SERVER['SERVER_PORT'];
+    }
+    
+    /**
+     * @return array
+     */
+    public static function scan($path = '.') {
+        $list = array();
+        foreach (\scandir($path) as $n)
+            static::isDot($n) or $list[] = static::join($path, $n);
+        return $list; # shallow
+    }
+    
+    /**
+     * @return array
+     */
+    public static function paths($path = '.') {
+        $list = array();
+        foreach (new RII(new RDI($path), RII::SELF_FIRST) as $splfileinfo)
+            static::isDot($path = $splfileinfo->getPathname()) or $list[] = $path;
+        return $list; # deep
+    }
+    
+    /**
+     * @return array
+     */
+    public static function files($path = '.') {
+        return \array_filter(static::paths($path), 'is_file');
+    }
+    
+    /**
+     * @return array
+     */
+    public static function dirs($path = '.') {
+        return \array_filter(static::paths($path), 'is_dir');
     }
 
     /**
      * Get a associative array containing the dir structure
      * @return array
      */
-    public static function tree($path) {
+    public static function tree($path = '.') {
         $list = array();
-        $base = static::rslash($path);
-        foreach (static::listPaths($path) as $n) {
-            if (\is_dir($dir = $base . $n)) {
-                # add slash to prevent integer index conflicts
-                $list["$n/"] = static::tree($dir);
-            } else { $list[] = $n; }
-        }
-        return $list;
-    }
-
-    /**
-     * @return array
-     */
-    public static function listPaths($path) {
-        $list = array();
-        foreach (\is_file($path) ? array(\basename($path)) : \scandir($path) as $n)
-            static::isDot($n) or $list[] = static::normalize($n);
-        return $list;
-    }
-    
-    /**
-     * @return array
-     */
-    public static function listDirs($path) {
-        $list = array();
-        $base = static::rslash($path);
-        foreach (static::listPaths($path) as $n)
-            \is_dir($base . $n) and $list[] = $n;
-        return $list;
-    }
-
-    /**
-     * @return array
-     */
-    public static function listFiles($path) {
-        $list = array();
-        $base = static::rslash($path);
-        foreach (static::listPaths($path) as $n) {
-            if ( ! \is_dir($base . $n))
-                $list[] = $n;
-            else foreach (static::listFiles($base . $n) as $file)
-                $list[] = "$n/$file";
-        }
+        foreach (\is_array($path) ? $path : static::scan($path) as $n)
+            \is_dir($n) ? $list["$n"] = static::tree($n) : $list[] = $n;
         return $list;
     }
     
     /**
      * Get the modified time of a file or a directory. For directories,
      * it gets the modified time of the most recently modified file.
-     * @param   string       $path     Full path to directory or file.
-     * @param   string       $format   Date string for use with date()
-     * @return  int|string|null
+     * @param  string  $path     Full path to directory or file.
+     * @param  string  $format   Date string for use with date()
+     * @return int|string|null
      */
     public static function mtime($path, $format = null) {
         $time = static::listFiles($path);
-        $time = $time ? \max(\array_map('filemtime', 
-            static::affix($time, static::rslash($path)))
-        ) : null;
+        $time = $time ? \max(\array_map('filemtime', static::affix($time, static::rslash($path)))) : null;
         return $format && $time ? \date($format, $time) : $time;
     }
     
     /**
      * @return object
      */
-    public static function iterator($path) {
-        return new \DirectoryIterator($path);
+    public static function walk($path = '.', callable $fn = null) {
+        $array = static::sort(\is_scalar($path) ? static::paths($path) : $path);
+        foreach ($array as $k => $v)
+            if (false === \call_user_func($fn, $v, $k, $object)) break;
+        return $array;
     }
     
     /**
@@ -319,22 +311,21 @@ class Path {
     /**
      * @return array
      */
-    public static function group(array $list) {
+    public static function depth(array $list) {
         $levels = array();
         foreach ($list as $i => $n)
             $levels[$i] = \substr_count($n, '/');
-        # Ensure result is ordered and non-sparse.
-        $result = \array_pad(array(), \max($levels), array());
+        $groups = \array_pad(array(), \max($levels), array()); # ensure ordered and non-sparse
         foreach ($list as $i => $n)
-            $result[$levels[$i]][] = $n;
-        return $result;
+            $groups[$levels[$i]][] = $n;
+        return $groups;
     }
     
     /**
      * @return array
      */
     public static function sort(array $list) {
-        return \call_user_func_array('array_merge', \array_reverse(static::group($list)));
+        return \call_user_func_array('array_merge', static::depth($list));
     }
     
     /**
@@ -356,8 +347,7 @@ class Path {
         if (\is_scalar($haystack))
             return false !== \strpos($haystack, $needle);
         foreach ((array) $haystack as $v)
-            if (self::contains($v, $needle))
-                return true;
+            if (self::contains($v, $needle)) return true;
         return false;
     }
     
@@ -369,7 +359,7 @@ class Path {
     public static function search($path, $needles) {
         $result = array();
         \is_array($needles) or $needles = \array_slice(\func_get_args(), 1);
-        foreach (\is_scalar($path) ? static::listPaths($path) : $path as $v)
+        foreach (\is_scalar($path) ? static::scan($path) : $path as $v)
             foreach ($needles as $needle)
                 static::contains($v, $needle) and $result[] = $v;
         return $result;
@@ -377,10 +367,10 @@ class Path {
     
     /**
      * Get the first $list item than passes $test
-     * @param   array|object  $list
-     * @param   callable      $test
-     * @param   int           $goal  number of params to pass to $test
-     * @return  mixed
+     * @param  array|object  $list
+     * @param  callable      $test
+     * @param  int           $goal  number of params to pass to $test
+     * @return mixed
      */
     public static function find($list, callable $test, $goal = null) {
         foreach ($list as $k => $v)
@@ -389,10 +379,10 @@ class Path {
     }
     
     /**
-     * @param   array      $arr    array to slice or pad depending on $goal
-     * @param   array|int  $goal   target length (or array to match length)
-     * @param   mixed      $filler value to pad with (when needed)
-     * @return  array
+     * @param  array      $arr    array to slice or pad depending on $goal
+     * @param  array|int  $goal   target length (or array to match length)
+     * @param  mixed      $filler value to pad with (when needed)
+     * @return array
      */
     protected static function agree(array $arr, $goal, $filler = null) {
         return \is_numeric($goal = \is_array($goal) ? \count($goal) : $goal) ? (
@@ -427,8 +417,7 @@ class Path {
      * @return mixed
      */
     public static function putJson($path, $data) {
-        if (null === $path)
-            return false;
+        if (null === $path) return false;
         $data instanceof \Closure and $data = $data(static::getJson($path));
         return \file_put_contents($path, \is_string($data) ? $data : \json_encode($data));
     }

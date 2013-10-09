@@ -1,8 +1,8 @@
 <?php
 /**
- * @link     http://github.com/ryanve/slash
- * @version  3.0.0-3
- * @license  MIT
+ * @link http://github.com/ryanve/slash
+ * @version 3.0.0-4
+ * @license MIT
  */
 namespace slash;
 
