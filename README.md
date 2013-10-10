@@ -80,8 +80,6 @@ scheme    authority                 path</pre>
 \slash\Path::find($list, $test)
 ```
 
-## License
-
-### Slash is available under the [MIT license](http://en.wikipedia.org/wiki/MIT_License)
+## [MIT license](http://en.wikipedia.org/wiki/MIT_License)
 
 Copyright (C) 2011 by [Ryan Van Etten](https://github.com/ryanve)

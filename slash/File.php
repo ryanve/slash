@@ -1,12 +1,18 @@
 <?php
 /**
- * @link http://github.com/ryanve/slash
- * @license MIT
+ * @package ryanve/slash
  */
 namespace slash;
-use \slash\Path;
 
 class File {
+    use traits\Mixin;
+    protected static $mixin = [
+        'exists' => '\\slash\\Path::isFile'
+      , 'get' => [__CLASS__, 'getFile']
+      , 'put' => [__CLASS__, 'putFile']
+      , 'load' => [__CLASS__, 'loadFile']
+    ];
+    
     /**
      * @param mixed $fn
      */

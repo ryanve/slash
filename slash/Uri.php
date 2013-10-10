@@ -1,28 +1,12 @@
 <?php
 /**
- * @link http://github.com/ryanve/slash
- * @license MIT
+ * @package ryanve/slash
  */
 namespace slash;
 
-class Uri {
-    /**
-     * @param string $str
-     * @param string $chars
-     * @return string
-     */
-    public static function lslash($str, $chars = '/') {
-        return $chars . \ltrim($str, $chars);
-    }
-    
-    /**
-     * @param string $str
-     * @param string $chars
-     * @return string
-     */
-    public static function rslash($str, $chars = '/') {
-        return \rtrim($str, $chars) . $chars;
-    }
+class Uri extends Slash {
+    use \slash\traits\Mixin;
+    protected static $mixin = [];
     
     /**
      * Remove the scheme and :// from a URI. The first `//` and anything to 

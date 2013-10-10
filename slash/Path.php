@@ -1,105 +1,20 @@
 <?php
 /**
- * @link http://github.com/ryanve/slash
- * @license MIT
+ * @package ryanve/slash
  */
 namespace slash;
 use \RecursiveIteratorIterator as RII;
 use \RecursiveDirectoryIterator as RDI;
 
-class Path {
-    const slashes = '/\\'; 
-    protected static $mixins = array(# aliases
-        'listPaths' => array(__CLASS__, 'paths')
-      , 'listFiles' => array(__CLASS__, 'files')
-      , 'listDirs' => array(__CLASS__, 'dirs')
-    );
+class Path extends Slash {
+    use traits\Mixin;
+    protected static $mixin = [# aliases
+        'exists' => [__CLASS__, 'isPath']
+      , 'listPaths' => [__CLASS__, 'paths']
+      , 'listFiles' => [__CLASS__, 'files']
+      , 'listDirs' => [__CLASS__, 'dirs']
+    ];
 
-    public static function __callStatic($name, $params) {
-        if (isset(static::$mixins[$name]))
-            return \call_user_func_array(static::$mixins[$name], $params);
-        \trigger_error(__CLASS__ . "::$name is not callable.");
-    }
-
-    public static function mixin($name, $fn = null) {
-        if (\is_scalar($name)) return static::$mixins[$name] = $fn;
-        if ($name) foreach ($name as $k => $v) self::mixin($k, $v);
-        return static::$mixins;
-    }
-    
-    /**
-     * @param string $name
-     * @return callable fully-qualified method
-     */
-    public static function method($name) {
-        return array(__CLASS__, $name);
-    }
-    
-    /**
-     * @return array
-     */
-    public static function methods() {
-        return \array_unique(\array_merge(\get_class_methods(__CLASS__), \array_keys(static::$mixins)));
-    }
-    
-    /**
-     * @return string
-     */
-    public static function lslash($str) {
-        return '/' . \ltrim($str, static::slashes);
-    }
-   
-    /**
-     * @return string
-     */   
-    public static function rslash($str) {
-        return \rtrim($str, static::slashes) . '/';
-    }
-    
-    /**
-     * @return string
-     */   
-    public static function trim($str) {
-        return \trim($str, static::slashes);
-    }
-    
-    /**
-     * @return string joined path parts
-     */
-    public static function join() {
-        $result = '';
-        foreach (\func_get_args() as $n)
-            $result = $result ? \rtrim($result, static::slashes) . '/' . \ltrim($n, static::slashes) : $n;
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    public static function split($path) {
-        $path = \trim(static::normalize($path), '/');
-        return '' === $path ? array() : \explode('/', $path);
-    }
-    
-    /**
-     * @return string|null
-     */
-    public static function part($path, $idx = 0) {
-        \is_array($path) or $path = static::split($path);
-        $idx = 0 > $idx ? \count($path) + $idx : (int) $idx;
-        return isset($path[$idx]) ? $path[$idx] : null;
-    }
-    
-    /**
-     * @param string|array $path
-     * @return string|array
-     */
-    public static function normalize($path) {
-        if ( ! \is_array($path)) return \str_replace('\\', '/', $path);
-        $keys = \array_map(array(__CLASS__, __FUNCTION__), \array_keys($path));
-        return \array_combine($keys, \array_map(array(__CLASS__, __FUNCTION__), $path));
-    }
-    
     /**
      * @return string
      */   
@@ -324,7 +239,7 @@ class Path {
      * @param array|string $needles
      */
     public static function locate($needles) {
-        return static::find(\is_array($needles) ? $needles : \func_get_args(), static::method('isPath'));
+        return static::find(\is_array($needles) ? $needles : \func_get_args(), static::method('exists'));
     }
     
     /**
