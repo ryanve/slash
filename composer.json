@@ -1,6 +1,7 @@
 {
     "name": "ryanve/slash",
     "description": "URI and filesystem path utilities.",
+    "version": "3.0.0-5",
     "homepage": "https://github.com/ryanve/slash",
     "keywords": ["uri", "url", "path", "filesystem", "directory", "json", "utility", "file"],
     "license": "MIT",
@@ -12,7 +13,7 @@
         "php": ">=5.3"
     },
     "autoload": {
-        "psr-0": { "slash": "../" }
+        "psr-0": { "slash": "./" }
     },
     "minimum-stability": "dev"
 }
