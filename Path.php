@@ -23,24 +23,24 @@ class Path {
     }
 
     public static function mixin($name, $fn = null) {
-        if (\is_scalar($name)) $fn and static::$mixins[$name] = $fn;
-        else foreach ($name as $k => $v) self::mixin($k, $v);
+        if (\is_scalar($name)) return static::$mixins[$name] = $fn;
+        if ($name) foreach ($name as $k => $v) self::mixin($k, $v);
+        return static::$mixins;
     }
     
     /**
-     * @param  string  $name
-     * @return string  fully-qualified method name
+     * @param string $name
+     * @return callable fully-qualified method
      */
     public static function method($name) {
-        return __CLASS__ . "::$name";
+        return array(__CLASS__, $name);
     }
     
     /**
      * @return array
      */
     public static function methods() {
-        $methods = \get_class_methods(__CLASS__);
-        return \array_merge($methods, \array_diff(\array_keys(static::$mixins), $methods));
+        return \array_unique(\array_merge(\get_class_methods(__CLASS__), \array_keys(static::$mixins)));
     }
     
     /**
@@ -72,8 +72,7 @@ class Path {
     }
     
     /**
-     * Join paths or URI parts using a fwd slash as the glue.
-     * @return string
+     * @return string joined path parts
      */
     public static function join() {
         $result = '';
@@ -121,7 +120,7 @@ class Path {
     }
     
     /**
-     * @return string|false
+     * @return string|bool
      */
     public static function ext($path, $add = null) {
         if (null === $add)
@@ -192,8 +191,8 @@ class Path {
     }
 
     /**
-     * @param  string   $path 
-     * @param  string   $scheme 
+     * @param string $path 
+     * @param string $scheme 
      * @return string
      */
     public static function toUri($path = '', $scheme = null) {
@@ -202,8 +201,8 @@ class Path {
     }
     
     /**
-     * @param  string   $path 
-     * @param  string   $scheme 
+     * @param string $path 
+     * @param string $scheme 
      * @return string
      */
     public static function toUrl($path, $scheme = null) {
@@ -254,8 +253,7 @@ class Path {
     }
 
     /**
-     * Get a associative array containing the dir structure
-     * @return array
+     * @return array associative array containing the dir structure
      */
     public static function tree($path = '.') {
         $list = array();
@@ -265,11 +263,9 @@ class Path {
     }
     
     /**
-     * Get the modified time of a file or a directory. For directories,
-     * it gets the modified time of the most recently modified file.
-     * @param  string  $path     Full path to directory or file.
-     * @param  string  $format   Date string for use with date()
-     * @return int|string|null
+     * @param string $path dir or file
+     * @param string $format date string for use with date()
+     * @return int|string|null modified time of file or most recent file in dir
      */
     public static function mtime($path, $format = null) {
         $time = static::files($path);
@@ -297,8 +293,8 @@ class Path {
     }
     
     /**
-     * @param  string  $path
-     * @param  string  $infix   text to insert before file extension
+     * @param string $path
+     * @param string $infix text to insert before file extension
      * @return string
      */
     public static function infix($path, $infix) {
@@ -327,15 +323,15 @@ class Path {
     
     /**
      * Get the first existent path from the supplied args.
-     * @param  array|string  $needles
+     * @param array|string $needles
      */
     public static function locate($needles) {
         return static::find(\is_array($needles) ? $needles : \func_get_args(), static::method('isPath'));
     }
     
     /**
-     * @param  string|array|object  $haystack
-     * @param  string               $needle
+     * @param string|array|object $haystack
+     * @param string $needle
      * @return bool
      */
     public static function contains($haystack, $needle) {
@@ -347,8 +343,8 @@ class Path {
     }
     
     /**
-     * @param  string|array|object  $path
-     * @param  string|array         $needles
+     * @param string|array|object $path
+     * @param string|array $needles
      * @return array
      */
     public static function search($path, $needles) {
@@ -361,50 +357,34 @@ class Path {
     }
     
     /**
-     * Get the first $list item than passes $test
-     * @param  array|object  $list
-     * @param  callable      $test
+     * @param array|object $list
+     * @param callable $test
      */
     public static function find($list, callable $test) {
         foreach ($list as $k => $v)
             if (\call_user_func($test, $v, $k, $list)) return $v;
     }
     
-    /** 
-     * @return mixed
-     */
     public static function getFile($path, callable $fn = null) {
         return static::done($fn, static::isFile($path) ? \file_get_contents($path) : false);
     }
-    
-    /** 
-     * @return mixed
-     */
+
     public static function putFile($path, $data) {
         return null !== $path ? \file_put_contents($path, 
             $data instanceof \Closure ? $data(static::getFile($path)) : $data
         ) : false;
     }
-    
-    /** 
-     * @return mixed
-     */
+
     public static function getJson($path, callable $fn = null) {
         return static::done($fn, \is_scalar($path) ? \json_decode(\file_get_contents($path)) : $path);
     }
-    
-    /** 
-     * @return mixed
-     */
+
     public static function putJson($path, $data) {
         if (null === $path) return false;
         $data instanceof \Closure and $data = $data(static::getJson($path));
         return \file_put_contents($path, \is_string($data) ? $data : \json_encode($data));
     }
-    
-    /** 
-     * @return mixed
-     */
+
     public static function loadFile($path, callable $fn = null) {
         if (static::isFile($path)) {
             \ob_start(); 
