@@ -328,11 +328,9 @@ class Path {
     /**
      * Get the first existent path from the supplied args.
      * @param  array|string  $needles
-     * @return mixed
      */
     public static function locate($needles) {
-        \is_array($needles) or $needles = \func_get_args();
-        return static::find($needles, static::method('isPath'));
+        return static::find(\is_array($needles) ? $needles : \func_get_args(), static::method('isPath'));
     }
     
     /**
@@ -366,25 +364,10 @@ class Path {
      * Get the first $list item than passes $test
      * @param  array|object  $list
      * @param  callable      $test
-     * @param  int           $goal  number of params to pass to $test
-     * @return mixed
      */
-    public static function find($list, callable $test, $goal = null) {
+    public static function find($list, callable $test) {
         foreach ($list as $k => $v)
-            if (\call_user_func_array($test, static::agree(array($v, $k, $list), $goal)))
-                return $v;
-    }
-    
-    /**
-     * @param  array      $arr    array to slice or pad depending on $goal
-     * @param  array|int  $goal   target length (or array to match length)
-     * @param  mixed      $filler value to pad with (when needed)
-     * @return array
-     */
-    protected static function agree(array $arr, $goal, $filler = null) {
-        return \is_numeric($goal = \is_array($goal) ? \count($goal) : $goal) ? (
-            $goal < \count($arr) ? \array_slice($arr, 0, $goal) : \array_pad($arr, $goal, $filler)
-        ) : $arr;
+            if (\call_user_func($test, $v, $k, $list)) return $v;
     }
     
     /** 
