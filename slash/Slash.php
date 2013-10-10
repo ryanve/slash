@@ -77,13 +77,4 @@ class Slash {
     public static function split($path) {
         return \preg_split(static::pattern, $path);
     }
-    
-    /**
-     * @return string|null
-     */
-    public static function part($path, $idx = 0) {
-        \is_array($path) or $path = static::split($path);
-        $idx = 0 > $idx ? \count($path) + $idx : (int) $idx;
-        return isset($path[$idx]) ? $path[$idx] : null;
-    }
 }
