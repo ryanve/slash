@@ -9,7 +9,7 @@ use \RecursiveIteratorIterator as RII;
 use \RecursiveDirectoryIterator as RDI;
 
 class Path {
-    const slashes = '/\\';    
+    const slashes = '/\\'; 
     protected static $mixins = array(# aliases
         'listPaths' => array(__CLASS__, 'paths')
       , 'listFiles' => array(__CLASS__, 'files')
@@ -99,10 +99,13 @@ class Path {
     }
     
     /**
-     * @return string
+     * @param string|array $path
+     * @return string|array
      */
     public static function normalize($path) {
-        return \str_replace('\\', '/', $path);
+        if ( ! \is_array($path)) return \str_replace('\\', '/', $path);
+        $keys = \array_map(array(__CLASS__, __FUNCTION__), \array_keys($path));
+        return \array_combine($keys, \array_map(array(__CLASS__, __FUNCTION__), $path));
     }
     
     /**
@@ -123,9 +126,8 @@ class Path {
      * @return string|bool
      */
     public static function ext($path, $add = null) {
-        if (null === $add)
-            # get the basename, remove any query params, get chars starting at last dot
-            return \strrchr(\strtok(\basename($path), '?'), '.');
+        # get basename, remove any query params, get chars starting at last dot:
+        if (null === $add) return \strrchr(\strtok(\basename($path), '?'), '.');
         $add = '.' . \ltrim($add, '.'); # add to path if missing
         return \basename($path) === \basename($path, $add) ? \rtrim($path, '.') . $add : $path;
     }
@@ -167,7 +169,6 @@ class Path {
     }
 
     /**
-     * Test if item is a dot folder name
      * @return bool
      */
     public static function isDot($item) {
@@ -258,7 +259,7 @@ class Path {
     public static function tree($path = '.') {
         $list = array();
         foreach (\is_array($path) ? $path : static::scan($path) as $n)
-            \is_dir($n) ? $list["$n"] = static::tree($n) : $list[] = $n;
+            \is_dir($n) ? $list[$n] = static::tree($n) : $list[] = $n;
         return $list;
     }
     
@@ -274,13 +275,13 @@ class Path {
     }
     
     /**
-     * @return object
+     * @return array
      */
     public static function walk($path = '.', callable $fn = null) {
-        $array = static::sort(\is_scalar($path) ? static::paths($path) : $path);
-        foreach ($array as $k => $v)
-            if (false === \call_user_func($fn, $v, $k, $object)) break;
-        return $array;
+        $trav = \is_scalar($path) ? static::paths($path) : $path;
+        foreach ($trav as $k => $v)
+            if (false === \call_user_func($fn, $v, $k, $trav)) break;
+        return $trav;
     }
     
     /**
@@ -300,25 +301,30 @@ class Path {
     public static function infix($path, $infix) {
         return \preg_replace('#(\.\w+)$#', "$infix$1", $path);
     }
+    
+    /**
+     * @return int
+     */
+    public static function depth($path) {
+        return \substr_count(static::normalize($path), '/');
+    }
 
     /**
      * @return array
      */
-    public static function depth(array $list) {
-        $levels = array();
-        foreach ($list as $i => $n)
-            $levels[$i] = \substr_count($n, '/');
-        $groups = \array_pad(array(), \max($levels), array()); # ensure ordered and non-sparse
-        foreach ($list as $i => $n)
-            $groups[$levels[$i]][] = $n;
+    public static function tier(array $list) {
+        $levels = \array_map(static::method('depth'), $list);
+        $groups = \array_pad(array(), \max($levels), array()); # ordered and non-sparse
+        foreach ($list as $k => $v)
+            $groups[$levels[$k]][] = $v;
         return $groups;
     }
-    
+
     /**
      * @return array
      */
     public static function sort(array $list) {
-        return \call_user_func_array('array_merge', static::depth($list));
+        return \call_user_func_array('array_merge', static::tier($list));
     }
     
     /**
@@ -370,9 +376,9 @@ class Path {
     }
 
     public static function putFile($path, $data) {
-        return null !== $path ? \file_put_contents($path, 
-            $data instanceof \Closure ? $data(static::getFile($path)) : $data
-        ) : false;
+        if (null === $path) return false;
+        $data instanceof \Closure and $data = $data(static::getJson($path));
+        return \file_put_contents($path, $data);
     }
 
     public static function getJson($path, callable $fn = null) {
