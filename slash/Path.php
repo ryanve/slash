@@ -79,7 +79,7 @@ class Path extends Slash {
      * @return bool
      */
     public static function isDot($item) {
-        return \in_array(\basename($item), array('.', '..'));
+        return \in_array(\basename($item), ['.', '..']);
     }
     
     /**
@@ -93,7 +93,7 @@ class Path extends Slash {
      * @return string|array|bool
      */
     public static function toAbs($path) {
-        if (\is_array($path)) return \array_map(array(__CLASS__, __FUNCTION__), $path); # recurse
+        if (\is_array($path)) return \array_map([__CLASS__, __FUNCTION__], $path); # recurse
         if (\is_string($path) || \is_numeric($path)) return \realpath($path); # resolve relative path
         return false;
     }
@@ -130,7 +130,7 @@ class Path extends Slash {
      * @return array
      */
     public static function scan($path = '.') {
-        $list = array();
+        $list = [];
         foreach (\scandir($path) as $n)
             static::isDot($n) or $list[] = static::join($path, $n);
         return $list; # shallow
@@ -140,7 +140,7 @@ class Path extends Slash {
      * @return array
      */
     public static function paths($path = '.') {
-        $list = array();
+        $list = [];
         foreach (new RII(new RDI($path), RII::SELF_FIRST) as $splfileinfo)
             static::isDot($path = $splfileinfo->getPathname()) or $list[] = $path;
         return $list; # deep
@@ -164,7 +164,7 @@ class Path extends Slash {
      * @return array associative array containing the dir structure
      */
     public static function tree($path = '.') {
-        $list = array();
+        $list = [];
         foreach (\is_array($path) ? $path : static::scan($path) as $n)
             \is_dir($n) ? $list[$n] = static::tree($n) : $list[] = $n;
         return $list;
@@ -221,7 +221,7 @@ class Path extends Slash {
      */
     public static function tier(array $list) {
         $levels = \array_map(static::method('depth'), $list);
-        $groups = \array_pad(array(), \max($levels), array()); # ordered and non-sparse
+        $groups = \array_pad([], \max($levels), []); # ordered and non-sparse
         foreach ($list as $k => $v)
             $groups[$levels[$k]][] = $v;
         return $groups;
@@ -261,7 +261,7 @@ class Path extends Slash {
      * @return array
      */
     public static function search($path, $needles) {
-        $result = array();
+        $result = [];
         \is_array($needles) or $needles = \array_slice(\func_get_args(), 1);
         foreach (\is_scalar($path) ? static::scan($path) : $path as $v)
             foreach ($needles as $needle)
