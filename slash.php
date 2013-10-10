@@ -1,9 +1,4 @@
 <?php
-/**
- * @link https://github.com/ryanve/slash
- * @license MIT
- */
-// bootstrap
 trait_exists('\\slash\\traits\\Mixin') or require './slash/traits/Mixin.php';
 class_exists('\\slash\\Slash') or require './slash/Slash.php';
 class_exists('\\slash\\Path') or require './slash/Path.php';
