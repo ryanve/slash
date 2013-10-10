@@ -128,6 +128,7 @@ class Path extends Slash {
     }
     
     /**
+     * @param string $path
      * @return array
      */
     public static function scan($path = '.') {
@@ -138,6 +139,7 @@ class Path extends Slash {
     }
     
     /**
+     * @param string $path
      * @return array
      */
     public static function paths($path = '.') {
@@ -148,6 +150,7 @@ class Path extends Slash {
     }
     
     /**
+     * @param string|array $path
      * @return array
      */
     public static function files($path = '.') {
@@ -156,6 +159,7 @@ class Path extends Slash {
     }
     
     /**
+     * @param string|array $path
      * @return array
      */
     public static function dirs($path = '.') {
@@ -163,6 +167,7 @@ class Path extends Slash {
     }
 
     /**
+     * @param string|array $path
      * @return array associative array containing the dir structure
      */
     public static function tree($path = '.') {
