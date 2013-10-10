@@ -306,7 +306,7 @@ class Path {
      * @return int
      */
     public static function depth($path) {
-        return \substr_count(static::normalize($path), '/');
+        return \substr_count($path, '/') + \substr_count($path, '\\');
     }
 
     /**
