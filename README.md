@@ -119,6 +119,6 @@ scheme    authority                 path</pre>
 ::methods($object?) // get array of all methods incl. mixins
 ```
 
-## [MIT license](http://en.wikipedia.org/wiki/MIT_License)
+## [MIT License](http://opensource.org/licenses/MIT)
 
-Copyright (C) 2011 by [Ryan Van Etten](https://github.com/ryanve)
+Copyright (C) 2013 by [Ryan Van Etten](https://github.com/ryanve)
