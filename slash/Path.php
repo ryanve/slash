@@ -152,14 +152,14 @@ class Path extends Slash {
      */
     public static function files($path = '.') {
         if (static::isFile($path)) return [$path];
-        return \array_filter(static::paths($path), 'is_file');
+        return \array_filter(\is_array($path) ? $path : static::paths($path), 'is_file');
     }
     
     /**
      * @return array
      */
     public static function dirs($path = '.') {
-        return \array_filter(static::paths($path), 'is_dir');
+        return \array_filter(\is_array($path) ? $path : static::paths($path), 'is_dir');
     }
 
     /**
