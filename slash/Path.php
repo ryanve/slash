@@ -184,16 +184,6 @@ class Path extends Slash {
     /**
      * @return array
      */
-    public static function walk($path = '.', callable $fn = null) {
-        $trav = \is_scalar($path) ? static::paths($path) : $path;
-        foreach ($trav as $k => $v)
-            if (false === \call_user_func($fn, $v, $k, $trav)) break;
-        return $trav;
-    }
-    
-    /**
-     * @return array
-     */
     public static function affix(array $list, $prefix = '', $suffix = '') {
         foreach ($list as &$n)
             $n = $prefix . $n . $suffix;
@@ -263,18 +253,19 @@ class Path extends Slash {
     public static function search($path, $needles) {
         $result = [];
         \is_array($needles) or $needles = \array_slice(\func_get_args(), 1);
-        foreach (\is_scalar($path) ? static::scan($path) : $path as $v)
+        foreach (\is_scalar($path) ? static::paths($path) : $path as $v)
             foreach ($needles as $needle)
                 static::contains($v, $needle) and $result[] = $v;
         return $result;
     }
     
     /**
-     * @param array|object $list
-     * @param callable $test
+     * @param string|array|object $path
+     * @param callable $fn
      */
-    public static function find($list, callable $test) {
-        foreach ($list as $k => $v)
-            if (\call_user_func($test, $v, $k, $list)) return $v;
+    public static function find($path = '.', callable $fn) {
+        $trav = \is_scalar($path) ? static::paths($path) : $path;
+        foreach ($trav as $k => $v)
+            if (\call_user_func($fn, $v, $k, $trav)) return $v;
     }
 }

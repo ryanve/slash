@@ -40,8 +40,6 @@ scheme    authority                 path</pre>
 \slash\Uri::query($uri) // get query str (excludes '?')
 \slash\Uri::hash($uri) // get fragment  (includes '#')
 \slash\Uri::fragment($uri) // get fragment  (excludes '#')
-\slash\Uri::lslash($uri) // left slash it
-\slash\Uri::rslash($uri) // right slash it
 \slash\Uri::nohash($uri) // remove hash
 \slash\Uri::novars($uri) // remove hash and query
 \slash\Uri::parse($uri) // get object containing parts
