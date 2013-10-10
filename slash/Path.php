@@ -151,6 +151,7 @@ class Path extends Slash {
      * @return array
      */
     public static function files($path = '.') {
+        if (static::isFile($path)) return [$path];
         return \array_filter(static::paths($path), 'is_file');
     }
     
@@ -173,13 +174,35 @@ class Path extends Slash {
     
     /**
      * @param string $path dir or file
-     * @param string $format date string for use with date()
-     * @return int|string|null modified time of file or most recent file in dir
+     * @return int modified time of file or most recent file in dir
      */
-    public static function mtime($path, $format = null) {
-        $time = static::files($path);
-        $time = $time ? \max(\array_map('filemtime', static::affix($time, static::rslash($path)))) : null;
-        return $format && $time ? \date($format, $time) : $time;
+    public static function mtime($path = '.') {
+        return \max(\array_map('filemtime', static::files($path)));
+    }
+    
+    /**
+     * @param string $path dir or file
+     * @return int changed time of file or most recent file in dir
+     */
+    public static function ctime($path = '.') {
+        return \max(\array_map('filectime', static::files($path)));
+    }
+    
+    /**
+     * @param string $path dir or file
+     * @param string $format date string for use with date()
+     * @return int accessed time of file or most recent file in dir
+     */
+    public static function atime($path = '.') {
+        return \max(\array_map('fileatime', static::files($path)));
+    }
+    
+    /**
+     * @param string $path dir or file
+     * @return int
+     */
+    public static function size($path = '.') {
+        return \array_sum(\array_map('filesize', static::files($path)));
     }
     
     /**
