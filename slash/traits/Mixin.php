@@ -13,7 +13,7 @@ trait Mixin {
      * @param string|array|object $name
      * @param callable $fn
      */
-    public static function mixin($name, $fn = null) {
+    public static function mixin($name = null, $fn = null) {
         if (\is_scalar($name)) {
             if (null !== $fn) return static::$mixin[$name] = $fn;
             return isset(static::$mixin[$name]) ? static::$mixin[$name] : null;
@@ -36,7 +36,7 @@ trait Mixin {
      * @return array associative
      */
     public static function methods($object = null) {
-        $result = null === $object ? [] : static::mixin();
+        $result = null === $object ? static::mixin() : [];
         null === $object and $object = \get_called_class();
         foreach (\get_class_methods($object) as $m)
             $result[$m] = [$object, $m];

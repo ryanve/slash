@@ -5,7 +5,7 @@
 namespace slash;
 
 class Uri extends Slash {
-    use \slash\traits\Mixin;
+    use traits\Mixin;
     protected static $mixin = [];
     
     /**
