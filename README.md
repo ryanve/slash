@@ -78,11 +78,6 @@ scheme    authority                 path</pre>
 \slash\Path::contains($haystack, $needle)
 \slash\Path::search($paths, $needles?)
 \slash\Path::find($list, $test)
-\slash\Path::getFile($path, $fn?)
-\slash\Path::getJson($path, $fn?)
-\slash\Path::putFile($path, $data)
-\slash\Path::putJson($path, $data)
-\slash\Path::loadFile($path, $fn?)
 ```
 
 ## License

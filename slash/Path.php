@@ -43,13 +43,6 @@ class Path {
     }
     
     /**
-     * @param mixed $fn
-     */
-    protected static function done($fn) {
-        return null === \array_shift($a = \func_get_args()) ? \array_shift($a) : \call_user_func_array($fn, $a);
-    }
-    
-    /**
      * @return string
      */
     public static function lslash($str) {
@@ -368,35 +361,5 @@ class Path {
     public static function find($list, callable $test) {
         foreach ($list as $k => $v)
             if (\call_user_func($test, $v, $k, $list)) return $v;
-    }
-    
-    public static function getFile($path, callable $fn = null) {
-        return static::done($fn, static::isFile($path) ? \file_get_contents($path) : false);
-    }
-
-    public static function putFile($path, $data) {
-        if (null === $path) return false;
-        $data instanceof \Closure and $data = $data(static::getJson($path));
-        return \file_put_contents($path, $data);
-    }
-
-    public static function getJson($path, callable $fn = null) {
-        return static::done($fn, \is_scalar($path) ? \json_decode(\file_get_contents($path)) : $path);
-    }
-
-    public static function putJson($path, $data) {
-        if (null === $path) return false;
-        $data instanceof \Closure and $data = $data(static::getJson($path));
-        return \file_put_contents($path, \is_string($data) ? $data : \json_encode($data));
-    }
-
-    public static function loadFile($path, callable $fn = null) {
-        if (static::isFile($path)) {
-            \ob_start(); 
-            include $path;
-            $path = \ob_get_contents();
-            \ob_end_clean();
-        } else { $path = false; }
-        return static::done($fn, $path);
     }
 }
