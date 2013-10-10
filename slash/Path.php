@@ -101,22 +101,22 @@ class Path extends Slash {
 
     /**
      * @param string $path 
-     * @param string $scheme 
+     * @param string $scheme defaults to none (protocol-relative)
      * @return string
      */
     public static function toUri($path = '', $scheme = null) {
-        $uri = ($scheme && \is_string($scheme) ? $scheme . '://' : '//') . $_SERVER['SERVER_NAME'];
+        $scheme = \is_string($scheme) ? \rtrim($scheme, ':') : null;
+        $uri = ($scheme ? $scheme . '://' : '//') . $_SERVER['SERVER_NAME'];
         return $uri . static::lslash(\str_replace($_SERVER['DOCUMENT_ROOT'], '', $path));
     }
     
     /**
-     * @param string $path 
-     * @param string $scheme 
+     * @param string $path
+     * @param string $scheme defaults to server type (https or http)
      * @return string
      */
-    public static function toUrl($path, $scheme = null) {
-        \is_string($scheme) or $scheme = static::isHttps() ? 'https' : 'http';
-        return static::toUri($path, $scheme);
+    public static function toUrl($path = '', $scheme = null) {
+        return static::toUri($path, \is_string($scheme) ? $scheme : (static::isHttps() ? 'https' : 'http'));
     }
     
     /**

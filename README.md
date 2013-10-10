@@ -89,9 +89,10 @@ scheme    authority                 path</pre>
 \slash\Path::isFile($item)
 \slash\Path::isDir($item)
 \slash\Path::isDot($item)
-\slash\Path::isAbs($path)
-\slash\Path::toAbs($path)
-\slash\Path::toUri($path, $scheme?)
+\slash\Path::isAbs($path) // test if path is absolute
+\slash\Path::toAbs($path) // resolve relative path
+\slash\Path::toUri($path, $scheme?) // defaults to protocol-relative
+\slash\Path::toUrl($path, $scheme?) // defaults to http or https
 \slash\Path::isHttps()
 \slash\Path::mtime($path)
 \slash\Path::ctime($path)
