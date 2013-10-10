@@ -6,9 +6,10 @@ namespace slash;
 
 class Slash {
     use traits\Mixin;
+    protected static $mixin = [];
     const glue = '/';
     const trim = '/\\';
-    const pattern = '#/|\\#';
+    const pattern = '#/|\\\#';
     
     /**
      * @return string
