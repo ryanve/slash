@@ -47,11 +47,12 @@ class Path extends Slash {
     }
     
     /**
-     * @return bool
+     * @return int
      */
     public static function inc($path) {
-        ($bool = static::isFile($path)) and include $path;
-        return $bool;
+        $count = 0;
+        foreach ((array) $path as $n) static::isFile($n) and ++$count and include $n;
+        return $count;
     }
     
     /**
