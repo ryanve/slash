@@ -214,8 +214,7 @@ class Path extends Slash {
    * @return array
    */
   public static function affix(array $list, $prefix = '', $suffix = '') {
-    foreach ($list as &$n)
-      $n = $prefix . $n . $suffix;
+    foreach ($list as &$n) $n = $prefix . $n . $suffix;
     return $list;
   }
   
@@ -241,8 +240,7 @@ class Path extends Slash {
   public static function tier(array $list) {
     $levels = \array_map(static::method('depth'), $list);
     $groups = \array_pad([], \max($levels), []); # ordered and non-sparse
-    foreach ($list as $k => $v)
-      $groups[$levels[$k]][] = $v;
+    foreach ($list as $k => $v) $groups[$levels[$k]][] = $v;
     return $groups;
   }
 
@@ -267,10 +265,8 @@ class Path extends Slash {
    * @return bool
    */
   public static function contains($haystack, $needle) {
-    if (\is_scalar($haystack))
-      return false !== \strpos($haystack, $needle);
-    foreach ((array) $haystack as $v)
-      if (self::contains($v, $needle)) return true;
+    if (\is_scalar($haystack)) return false !== \strpos($haystack, $needle);
+    foreach ((array) $haystack as $v) if (self::contains($v, $needle)) return true;
     return false;
   }
   
@@ -294,7 +290,6 @@ class Path extends Slash {
    */
   public static function find($path = '.', callable $fn) {
     $trav = \is_scalar($path) ? static::paths($path) : $path;
-    foreach ($trav as $k => $v)
-      if (\call_user_func($fn, $v, $k, $trav)) return $v;
+    foreach ($trav as $k => $v) if (\call_user_func($fn, $v, $k, $trav)) return $v;
   }
 }

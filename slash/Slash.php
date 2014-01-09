@@ -57,10 +57,9 @@ class Slash {
    * @return string joined parts
    */
   public static function join() {
-    $str = '';
-    foreach (\func_get_args() as $n)
-      $str = $str ? static::rtrim($str) . static::glue . static::ltrim($n) : $n;
-    return $str;
+    $s = '';
+    foreach (\func_get_args() as $n) $s = $s ? static::rtrim($s) . static::glue . static::ltrim($n) : $n;
+    return $s;
   }
   
   /**

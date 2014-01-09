@@ -19,7 +19,7 @@ class Uri extends Slash {
    * @example bar('www.example.com/3') # 'www.example.com/3'
    */
   public static function bar($uri) {
-    if (!$uri || !is_string($uri)) return '';
+    if (!$uri || !\is_string($uri)) return '';
     $uri = \explode('://', $uri);
     isset($uri[1]) and \array_shift($uri);
     $uri = \trim(\implode('://', $uri ));
@@ -105,9 +105,7 @@ class Uri extends Slash {
    * @example authority('foo://user:pass@example.com:800/dir/') # 'user:pass@example.com:800'
    */
   public static function authority($uri) {
-    if (!$uri) return '';
-    ($uri = static::bar($uri)) and ($uri = \strtok($uri, '/?#')) and (\strpos($uri, '.') or $uri = '');
-    return (string) $uri;
+    return ($uri = static::bar($uri)) && ($uri = \strtok($uri, '/?#')) && \strpos($uri, '.') ? $uri : '';
   }
   
   /**
@@ -115,8 +113,7 @@ class Uri extends Slash {
    * @return string
    */
   public static function userinfo($uri) {
-    $uri and $uri = static::authority($uri);
-    return $uri && ($pos = \strrpos($uri, '@')) ? \substr($uri, 0, $pos) : '';
+    return $uri && ($uri = static::authority($uri)) && ($i = \strrpos($uri, '@')) ? \substr($uri, 0, $i) : '';
   }
 
   /**
@@ -185,15 +182,11 @@ class Uri extends Slash {
     # RE: http://tools.ietf.org/html/rfc3986#section-3.3
     # <mailto:fred@example.com> has a path of "fred@example.com"
     # whereas <foo://info.example.com?fred> has an empty path
-    $col = \strpos($uri, ':');
-    $uri = false !== $col 
-      && '://' !== \substr($uri, $col, 3)
-      && (!($sls = \strpos($uri, '/')) || 0 < ($sls - $col))
-      ? \substr(\trim($uri), ++$col) # mailto:fred@example.com
-      : (($uri = static::bar($uri)) ? \strstr($uri, '/') : $uri);
-    $uri and ($uri = (string) \strtok($uri, '?#'))
-       and ($uri = \str_replace( '//', '/', $uri ));
-    return $uri ? $uri : '';
+    $c = \strpos($uri, ':');
+    if (false !== $c && '://' !== \substr($uri, $c, 3) && (!($s = \strpos($uri, '/')) || 0 < $s-$c))
+      $uri = \substr(\trim($uri), ++$c); # mailto:fred@example.com
+    elseif ($uri = static::bar($uri)) $uri = \strstr($uri, '/');
+    return $uri and ($uri = \strtok($uri, '?#')) && ($uri = \str_replace('//', '/', $uri)) ? $uri : '';
   }
 
   /**
@@ -204,11 +197,11 @@ class Uri extends Slash {
    */
   public static function query($uri) {
     if (!$uri) return '';
-    $uri = static::bar($uri);
-    $uri and ($uri = \strtok($uri, '#'))
-       and ($uri = \strstr($uri, '?'))
-       and ($uri = \substr($uri, 1 ))
-       and ($uri = \html_entity_decode($uri));
+    ($uri = static::bar($uri))
+      and ($uri = \strtok($uri, '#'))
+      and ($uri = \strstr($uri, '?'))
+      and ($uri = \substr($uri, 1 ))
+      and ($uri = \html_entity_decode($uri));
     return (string) $uri;
   }
 
@@ -292,8 +285,8 @@ class Uri extends Slash {
     $o->query = \html_entity_decode(\implode('?', $part));
     
     # Hash / Fragment
-    if ($hash = (string) \strstr($o->bar, '#'))
-      $o->fragment = (string) \substr($o->hash = $hash, 1);
+    if ($hash = \strstr($o->bar, '#')) $o->fragment = (string) \substr($o->hash = $hash, 1);
+
     return $o;
   }
 }

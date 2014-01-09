@@ -38,8 +38,7 @@ trait Mixin {
   public static function methods($object = null) {
     $result = null === $object ? static::mixin() : [];
     null === $object and $object = \get_called_class();
-    foreach (\get_class_methods($object) as $m)
-      $result[$m] = [$object, $m];
+    foreach (\get_class_methods($object) as $m) $result[$m] = [$object, $m];
     return $result;
   }
 }
