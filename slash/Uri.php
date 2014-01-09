@@ -19,11 +19,11 @@ class Uri extends Slash {
    * @example bar('www.example.com/3') # 'www.example.com/3'
    */
   public static function bar($uri) {
-    if (!$uri || !\is_string($uri)) return '';
-    $uri = \explode('://', $uri);
-    isset($uri[1]) and \array_shift($uri);
-    $uri = \trim(\implode('://', $uri ));
-    return \ltrim(\ltrim($uri, ':/'));
+    if (!$uri || !is_string($uri)) return '';
+    $uri = explode('://', $uri);
+    isset($uri[1]) and array_shift($uri);
+    $uri = trim(implode('://', $uri ));
+    return ltrim(ltrim($uri, ':/'));
   }
   
   /**
@@ -34,9 +34,9 @@ class Uri extends Slash {
    * @link http://dev.airve.com/demo/speed_tests/php/fragment.php
    */
   public static function fragment($uri) {
-    if (!isset($uri) || !\is_string($uri)) return '';
-    $pos = \strpos( $uri, '#' );
-    return $pos === false ? '' : \substr($uri, ++$pos);
+    if (!isset($uri) || !is_string($uri)) return '';
+    $pos = strpos( $uri, '#' );
+    return $pos === false ? '' : substr($uri, ++$pos);
   }
   
   /**
@@ -45,7 +45,7 @@ class Uri extends Slash {
    * @return string
    */
   public static function hash($uri) {
-    return isset($uri) && \is_string($uri) ? ($uri = \strstr($uri, '#') ?: '') : '';
+    return isset($uri) && is_string($uri) ? ($uri = strstr($uri, '#') ?: '') : '';
   }
   
   /**
@@ -55,7 +55,7 @@ class Uri extends Slash {
    * @return string
    */
   public static function hier($uri) {
-    return (string) (($uri = static::bar($uri)) ? \strtok($uri, '?#') : $uri);
+    return (string) (($uri = static::bar($uri)) ? strtok($uri, '?#') : $uri);
   }
   
   /**
@@ -72,7 +72,7 @@ class Uri extends Slash {
   public static function prorel($uri, $scheme = '') {
     $uri = static::bar($uri);
     if ('' === $uri) return $uri;
-    $scheme = $scheme ? \rtrim($scheme, ':/') : '';
+    $scheme = $scheme ? rtrim($scheme, ':/') : '';
     $scheme and $scheme .= ':';
     return $scheme . '//' . $uri;
   }
@@ -86,14 +86,14 @@ class Uri extends Slash {
    */
   public static function scheme($uri) {
     # Fail fast if the uri does not look absolute. (Count < 2 means no '://')
-    $uri = \explode('://', $uri); 
+    $uri = explode('://', $uri); 
     if (!isset($uri[1])) return '';
     # Trim the left side for safe use on form fields and use strtok to ensure we leftmost `:`
-    $uri = \strtok(\ltrim($uri[0] ), ':');
+    $uri = strtok(ltrim($uri[0] ), ':');
     # check for invalid chars
-    if (!$uri || \preg_match('#[^a-z0-9.+-]#', $uri = \strtolower($uri))) return '';
+    if (!$uri || preg_match('#[^a-z0-9.+-]#', $uri = strtolower($uri))) return '';
     # must start with a letter
-    return \preg_match('#^[a-z]#', $uri) ? $uri : '';
+    return preg_match('#^[a-z]#', $uri) ? $uri : '';
   }
 
   /**
@@ -105,7 +105,7 @@ class Uri extends Slash {
    * @example authority('foo://user:pass@example.com:800/dir/') # 'user:pass@example.com:800'
    */
   public static function authority($uri) {
-    return ($uri = static::bar($uri)) && ($uri = \strtok($uri, '/?#')) && \strpos($uri, '.') ? $uri : '';
+    return ($uri = static::bar($uri)) && ($uri = strtok($uri, '/?#')) && strpos($uri, '.') ? $uri : '';
   }
   
   /**
@@ -113,7 +113,7 @@ class Uri extends Slash {
    * @return string
    */
   public static function userinfo($uri) {
-    return $uri && ($uri = static::authority($uri)) && ($i = \strrpos($uri, '@')) ? \substr($uri, 0, $i) : '';
+    return $uri && ($uri = static::authority($uri)) && ($i = strrpos($uri, '@')) ? substr($uri, 0, $i) : '';
   }
 
   /**
@@ -121,7 +121,7 @@ class Uri extends Slash {
    * @return string
    */
   public static function user($uri) {
-    return (string) \strtok(static::userinfo($uri), ':');
+    return (string) strtok(static::userinfo($uri), ':');
   }
 
   /**
@@ -129,8 +129,8 @@ class Uri extends Slash {
    * @return string
    */
   public static function pass($uri) {
-    $pos = ($uri = static::userinfo($uri)) ? \strpos($uri, ':') : false;
-    return $pos ? (string) \substr($uri, ++$pos) : '';
+    $pos = ($uri = static::userinfo($uri)) ? strpos($uri, ':') : false;
+    return $pos ? (string) substr($uri, ++$pos) : '';
   }
 
   /**
@@ -145,9 +145,9 @@ class Uri extends Slash {
    */
   public static function hostname($uri) {
     $uri and ($uri = static::authority($uri))
-      and ($uri = \explode('@', $uri))
-      and ($uri = \array_pop($uri))
-      and ($uri = \strtok($uri, ':'));
+      and ($uri = explode('@', $uri))
+      and ($uri = array_pop($uri))
+      and ($uri = strtok($uri, ':'));
     return (string) $uri;
   }
 
@@ -162,9 +162,9 @@ class Uri extends Slash {
    */
   public static function port($uri) {
     if (!$uri) return '';
-    $uri = \explode('@', static::authority($uri));
-    $uri = \explode(':', \array_pop($uri));
-    return 2 == \count($uri) && \ctype_digit($uri[1]) ? $uri[1] : '';
+    $uri = explode('@', static::authority($uri));
+    $uri = explode(':', array_pop($uri));
+    return 2 == count($uri) && ctype_digit($uri[1]) ? $uri[1] : '';
   }
 
   /**
@@ -178,15 +178,15 @@ class Uri extends Slash {
    * @example path('//user:pass@example.com:800/dir/') # 'dir/'
    */
   public static function path($uri) {
-    if (!isset($uri) || !\is_string($uri)) return $uri;
+    if (!isset($uri) || !is_string($uri)) return $uri;
     # RE: http://tools.ietf.org/html/rfc3986#section-3.3
     # <mailto:fred@example.com> has a path of "fred@example.com"
     # whereas <foo://info.example.com?fred> has an empty path
-    $c = \strpos($uri, ':');
-    if (false !== $c && '://' !== \substr($uri, $c, 3) && (!($s = \strpos($uri, '/')) || 0 < $s-$c))
-      $uri = \substr(\trim($uri), ++$c); # mailto:fred@example.com
-    elseif ($uri = static::bar($uri)) $uri = \strstr($uri, '/');
-    return $uri and ($uri = \strtok($uri, '?#')) && ($uri = \str_replace('//', '/', $uri)) ? $uri : '';
+    $c = strpos($uri, ':');
+    if (false !== $c && '://' !== substr($uri, $c, 3) && (!($s = strpos($uri, '/')) || 0 < $s-$c))
+      $uri = substr(trim($uri), ++$c); # mailto:fred@example.com
+    elseif ($uri = static::bar($uri)) $uri = strstr($uri, '/');
+    return $uri and ($uri = strtok($uri, '?#')) && ($uri = str_replace('//', '/', $uri)) ? $uri : '';
   }
 
   /**
@@ -198,10 +198,10 @@ class Uri extends Slash {
   public static function query($uri) {
     if (!$uri) return '';
     ($uri = static::bar($uri))
-      and ($uri = \strtok($uri, '#'))
-      and ($uri = \strstr($uri, '?'))
-      and ($uri = \substr($uri, 1 ))
-      and ($uri = \html_entity_decode($uri));
+      and ($uri = strtok($uri, '#'))
+      and ($uri = strstr($uri, '?'))
+      and ($uri = substr($uri, 1 ))
+      and ($uri = html_entity_decode($uri));
     return (string) $uri;
   }
 
@@ -215,7 +215,7 @@ class Uri extends Slash {
    * @example prefetch('foo://user:pass@example.com:800/dir/') # '//example.com'
    */
   public static function prefetch($uri) {
-    return \strlen($uri = static::hostname($uri)) ? '//' . $uri : $uri;
+    return strlen($uri = static::hostname($uri)) ? '//' . $uri : $uri;
   }
 
   /**
@@ -223,7 +223,7 @@ class Uri extends Slash {
    * @return string
    */
   public static function novars($str) {
-    return isset($str) && \is_string($str) ? (string) \strtok($str, '?#') : '';
+    return isset($str) && is_string($str) ? (string) strtok($str, '?#') : '';
   }
 
   /**
@@ -231,15 +231,15 @@ class Uri extends Slash {
    * @return string
    */
   public static function nohash($str) {
-    return isset($str) && \is_string($str) ? (string) \strtok($str, '#') : '';
+    return isset($str) && is_string($str) ? (string) strtok($str, '#') : '';
   }
 
   /**
    * @return object
    */
   public static function parse($uri = null) {
-    $o = new \stdClass;
-    if (!$uri || !\is_string($uri)) return $o;
+    $o = (object) [];
+    if (!$uri || !is_string($uri)) return $o;
     
     $o->uri = $uri;
     $o->scheme = static::scheme($uri);
@@ -248,44 +248,44 @@ class Uri extends Slash {
     if (!$bar) return $o;
 
     # Authority / Hier / Path
-    $o->hier = (string) \strtok($bar, '?#');
-    $part = \explode('/', $o->hier);
-    $o->authority = \array_shift($part);
-    $o->path = static::lslash(\implode('/', $part));
+    $o->hier = (string) strtok($bar, '?#');
+    $part = explode('/', $o->hier);
+    $o->authority = array_shift($part);
+    $o->path = static::lslash(implode('/', $part));
 
     # Authority
-    if (!\strpos($o->authority, '.')) {
+    if (!strpos($o->authority, '.')) {
       # Authority did not contain period => treat as relative path.
       $o->path = static::lslash($o->authority . $o->path);
       $o->authority = '';
     } else {
       # Separate authority.
-      $auth = \explode('@', $o->authority);
-      $part = \array_pop($auth); # includes host and port
-      $userinfo = \implode('@', $auth);
+      $auth = explode('@', $o->authority);
+      $part = array_pop($auth); # includes host and port
+      $userinfo = implode('@', $auth);
 
       # host / port:
-      $part = \explode(':', $part);
-      $o->hostname = \array_shift($part);
+      $part = explode(':', $part);
+      $o->hostname = array_shift($part);
       $o->prefetch = '//' . $o->hostname;
-      1 == \count($part) && \ctype_digit($part[0]) and $o->port = $part[0];
+      1 == count($part) && ctype_digit($part[0]) and $o->port = $part[0];
     
       # User / Pass
       if ($userinfo) {
         $o->userinfo = $userinfo;
-        $part = \explode(':', $userinfo);
-        $o->user = \array_shift($part);
-        \count($part) and $o->pass = \implode(':', $part);
+        $part = explode(':', $userinfo);
+        $o->user = array_shift($part);
+        count($part) and $o->pass = implode(':', $part);
       }
     }
     
     # Query
-    $part = \explode('?', \strtok($bar, '#' )); # nohash
-    \array_shift($part); # novars
-    $o->query = \html_entity_decode(\implode('?', $part));
+    $part = explode('?', strtok($bar, '#' )); # nohash
+    array_shift($part); # novars
+    $o->query = html_entity_decode(implode('?', $part));
     
     # Hash / Fragment
-    if ($hash = \strstr($o->bar, '#')) $o->fragment = (string) \substr($o->hash = $hash, 1);
+    if ($hash = strstr($o->bar, '#')) $o->fragment = (string) substr($o->hash = $hash, 1);
 
     return $o;
   }

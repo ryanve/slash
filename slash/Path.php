@@ -34,16 +34,16 @@ class Path extends Slash {
    */
   public static function ext($path, $add = null) {
     # get basename, remove any query params, get chars starting at last dot:
-    if (null === $add) return \strrchr(\strtok(\basename($path), '?'), '.');
-    $add = '.' . \ltrim($add, '.'); # add to path if missing
-    return \basename($path) === \basename($path, $add) ? \rtrim($path, '.') . $add : $path;
+    if (null === $add) return strrchr(strtok(basename($path), '?'), '.');
+    $add = '.' . ltrim($add, '.'); # add to path if missing
+    return basename($path) === basename($path, $add) ? rtrim($path, '.') . $add : $path;
   }
   
   /**
    * @return string
    */
   public static function filename($path) {
-    return \pathinfo($path, PATHINFO_FILENAME);
+    return pathinfo($path, PATHINFO_FILENAME);
   }
   
   /**
@@ -59,43 +59,43 @@ class Path extends Slash {
    * @return bool
    */
   public static function isPath($item) {
-    return \is_scalar($item) && \file_exists($item);
+    return is_scalar($item) && file_exists($item);
   }
   
   /**
    * @return bool
    */
   public static function isDir($item) {
-    return \is_scalar($item) && \is_dir($item);
+    return is_scalar($item) && is_dir($item);
   }
   
   /**
    * @return bool
    */
   public static function isFile($item) {
-    return \is_scalar($item) && \is_file($item);
+    return is_scalar($item) && is_file($item);
   }
 
   /**
    * @return bool
    */
   public static function isDot($item) {
-    return \in_array(\basename($item), ['.', '..']);
+    return in_array(basename($item), ['.', '..']);
   }
   
   /**
    * @return bool
    */
   public static function isAbs($item) {
-    return \is_scalar($item) && \realpath($item) === $item;
+    return is_scalar($item) && realpath($item) === $item;
   }
   
   /**
    * @return string|array|bool
    */
   public static function toAbs($path) {
-    if (\is_array($path)) return \array_map([__CLASS__, __FUNCTION__], $path); # recurse
-    if (\is_string($path) || \is_numeric($path)) return \realpath($path); # resolve relative path
+    if (is_array($path)) return array_map([__CLASS__, __FUNCTION__], $path); # recurse
+    if (is_string($path) || is_numeric($path)) return realpath($path); # resolve relative path
     return false;
   }
 
@@ -105,9 +105,9 @@ class Path extends Slash {
    * @return string
    */
   public static function toUri($path = '', $scheme = null) {
-    $scheme = \is_string($scheme) ? \rtrim($scheme, ':') : null;
+    $scheme = is_string($scheme) ? rtrim($scheme, ':') : null;
     $uri = ($scheme ? $scheme . '://' : '//') . $_SERVER['SERVER_NAME'];
-    return $uri . static::lslash(\str_replace($_SERVER['DOCUMENT_ROOT'], '', $path));
+    return $uri . static::lslash(str_replace($_SERVER['DOCUMENT_ROOT'], '', $path));
   }
   
   /**
@@ -116,14 +116,14 @@ class Path extends Slash {
    * @return string
    */
   public static function toUrl($path = '', $scheme = null) {
-    return static::toUri($path, \is_string($scheme) ? $scheme : (static::isHttps() ? 'https' : 'http'));
+    return static::toUri($path, is_string($scheme) ? $scheme : (static::isHttps() ? 'https' : 'http'));
   }
   
   /**
    * @return bool
    */
   public static function isHttps() {
-    return !empty($_SERVER['HTTPS']) and 'off' !== \strtolower($_SERVER['HTTPS'])
+    return !empty($_SERVER['HTTPS']) and 'off' !== strtolower($_SERVER['HTTPS'])
       or !empty($_SERVER['SERVER_PORT']) and 443 == $_SERVER['SERVER_PORT'];
   }
   
@@ -133,7 +133,7 @@ class Path extends Slash {
    */
   public static function scan($path = '.') {
     $list = [];
-    foreach (\scandir($path) as $n)
+    foreach (scandir($path) as $n)
       static::isDot($n) or $list[] = static::join($path, $n);
     return $list; # shallow
   }
@@ -155,7 +155,7 @@ class Path extends Slash {
    */
   public static function files($path = '.') {
     if (static::isFile($path)) return [$path];
-    return \array_filter(\is_array($path) ? $path : static::paths($path), 'is_file');
+    return array_filter(is_array($path) ? $path : static::paths($path), 'is_file');
   }
   
   /**
@@ -163,7 +163,7 @@ class Path extends Slash {
    * @return array
    */
   public static function dirs($path = '.') {
-    return \array_filter(\is_array($path) ? $path : static::paths($path), 'is_dir');
+    return array_filter(is_array($path) ? $path : static::paths($path), 'is_dir');
   }
 
   /**
@@ -172,8 +172,8 @@ class Path extends Slash {
    */
   public static function tree($path = '.') {
     $list = [];
-    foreach (\is_array($path) ? $path : static::scan($path) as $n)
-      \is_dir($n) ? $list[$n] = static::tree($n) : $list[] = $n;
+    foreach (is_array($path) ? $path : static::scan($path) as $n)
+      is_dir($n) ? $list[$n] = static::tree($n) : $list[] = $n;
     return $list;
   }
   
@@ -182,7 +182,7 @@ class Path extends Slash {
    * @return int modified time of file or most recent file in dir
    */
   public static function mtime($path = '.') {
-    return \max(\array_map('filemtime', static::files($path)));
+    return max(array_map('filemtime', static::files($path)));
   }
   
   /**
@@ -190,7 +190,7 @@ class Path extends Slash {
    * @return int changed time of file or most recent file in dir
    */
   public static function ctime($path = '.') {
-    return \max(\array_map('filectime', static::files($path)));
+    return max(array_map('filectime', static::files($path)));
   }
   
   /**
@@ -199,7 +199,7 @@ class Path extends Slash {
    * @return int accessed time of file or most recent file in dir
    */
   public static function atime($path = '.') {
-    return \max(\array_map('fileatime', static::files($path)));
+    return max(array_map('fileatime', static::files($path)));
   }
   
   /**
@@ -207,7 +207,7 @@ class Path extends Slash {
    * @return int
    */
   public static function size($path = '.') {
-    return \array_sum(\array_map('filesize', static::files($path)));
+    return array_sum(array_map('filesize', static::files($path)));
   }
   
   /**
@@ -224,22 +224,22 @@ class Path extends Slash {
    * @return string
    */
   public static function infix($path, $infix) {
-    return \preg_replace('#(\.\w+)$#', "$infix$1", $path);
+    return preg_replace('#(\.\w+)$#', "$infix$1", $path);
   }
   
   /**
    * @return int
    */
   public static function depth($path) {
-    return \substr_count($path, '/') + \substr_count($path, '\\');
+    return substr_count($path, '/') + substr_count($path, '\\');
   }
 
   /**
    * @return array
    */
   public static function tier(array $list) {
-    $levels = \array_map(static::method('depth'), $list);
-    $groups = \array_pad([], \max($levels), []); # ordered and non-sparse
+    $levels = array_map(static::method('depth'), $list);
+    $groups = array_pad([], max($levels), []); # ordered and non-sparse
     foreach ($list as $k => $v) $groups[$levels[$k]][] = $v;
     return $groups;
   }
@@ -248,7 +248,7 @@ class Path extends Slash {
    * @return array
    */
   public static function sort(array $list) {
-    return \call_user_func_array('array_merge', static::tier($list));
+    return call_user_func_array('array_merge', static::tier($list));
   }
   
   /**
@@ -256,7 +256,7 @@ class Path extends Slash {
    * @param array|string $needles
    */
   public static function locate($needles) {
-    return static::find(\is_array($needles) ? $needles : \func_get_args(), static::method('exists'));
+    return static::find(is_array($needles) ? $needles : func_get_args(), static::method('exists'));
   }
   
   /**
@@ -265,7 +265,7 @@ class Path extends Slash {
    * @return bool
    */
   public static function contains($haystack, $needle) {
-    if (\is_scalar($haystack)) return false !== \strpos($haystack, $needle);
+    if (is_scalar($haystack)) return false !== strpos($haystack, $needle);
     foreach ((array) $haystack as $v) if (self::contains($v, $needle)) return true;
     return false;
   }
@@ -277,8 +277,8 @@ class Path extends Slash {
    */
   public static function search($path, $needles) {
     $result = [];
-    \is_array($needles) or $needles = \array_slice(\func_get_args(), 1);
-    foreach (\is_scalar($path) ? static::paths($path) : $path as $v)
+    is_array($needles) or $needles = array_slice(func_get_args(), 1);
+    foreach (is_scalar($path) ? static::paths($path) : $path as $v)
       foreach ($needles as $needle)
         static::contains($v, $needle) and $result[] = $v;
     return $result;
@@ -289,7 +289,7 @@ class Path extends Slash {
    * @param callable $fn
    */
   public static function find($path = '.', callable $fn) {
-    $trav = \is_scalar($path) ? static::paths($path) : $path;
-    foreach ($trav as $k => $v) if (\call_user_func($fn, $v, $k, $trav)) return $v;
+    $trav = is_scalar($path) ? static::paths($path) : $path;
+    foreach ($trav as $k => $v) if (call_user_func($fn, $v, $k, $trav)) return $v;
   }
 }

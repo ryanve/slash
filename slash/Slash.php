@@ -15,21 +15,21 @@ class Slash {
    * @return string
    */   
   public static function trim($str) {
-    return \trim($str, static::trim);
+    return trim($str, static::trim);
   }
   
   /**
    * @return string
    */   
   public static function ltrim($str) {
-    return \ltrim($str, static::trim);
+    return ltrim($str, static::trim);
   }
   
   /**
    * @return string
    */   
   public static function rtrim($str) {
-    return \rtrim($str, static::trim);
+    return rtrim($str, static::trim);
   }
   
   /**
@@ -58,7 +58,7 @@ class Slash {
    */
   public static function join() {
     $s = '';
-    foreach (\func_get_args() as $n) $s = $s ? static::rtrim($s) . static::glue . static::ltrim($n) : $n;
+    foreach (func_get_args() as $n) $s = $s ? static::rtrim($s) . static::glue . static::ltrim($n) : $n;
     return $s;
   }
   
@@ -67,13 +67,13 @@ class Slash {
    * @return string|array
    */
   public static function normalize($path) {
-    return \preg_replace(static::pattern, static::glue, $path);
+    return preg_replace(static::pattern, static::glue, $path);
   }
 
   /**
    * @return array
    */
   public static function split($path) {
-    return \preg_split(static::pattern, $path);
+    return preg_split(static::pattern, $path);
   }
 }
